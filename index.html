@@ -7,8 +7,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- BACKGROUND: Animated blurred database -->
+  <div class="bg-database" id="bgDatabase"></div>
+
+  <!-- MAIN CONTENT -->
   <div class="container">
-    <h1>JST Just Safe Trade Registry</h1>
+    <h1>🚫 Roblox Scammer Registry</h1>
     <p class="subtitle">Community-maintained database. Reports are manually verified via Discord.</p>
 
     <div class="search-box">
@@ -25,7 +29,100 @@
   </div>
 
   <script>
-    // Load the data.json file on page load
+    // ===================== BACKGROUND ANIMATION =====================
+    const bgContainer = document.getElementById('bgDatabase');
+    
+    // Pool of random name parts to generate usernames
+    const prefixes = ['xX', 'Pro', 'Noob', 'Dark', 'Epic', 'Master', 'Shadow', 'Blaze', 'Frost', 'Cyber', 'Ninja', 'Pixel', 'King', 'Queen', 'Lord', 'Mega', 'Ultra', 'Hyper', 'Zero', 'Max'];
+    const suffixes = ['_Gamer', '_YT', '_Roblox', '123', '456', '789', '2000', '2024', 'Playz', 'Fan', 'Boy', 'Girl', 'Man', 'Pro', 'X', 'Z', 'Slayer', 'Hunter', 'Wizard', 'Dragon'];
+    
+    const statuses = ['Active', 'Offline', 'Banned', 'Pending', 'Verified', 'Scam Watch'];
+    
+    function getRandomUsername() {
+      const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+      const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+      const number = Math.floor(Math.random() * 9999);
+      return `${prefix}${suffix}${number}`;
+    }
+    
+    function getRandomId() {
+      return Math.floor(Math.random() * 900000000) + 100000000;
+    }
+    
+    function getRandomDate() {
+      const year = 2024 + Math.floor(Math.random() * 3);
+      const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+      const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    
+    function getRandomStatus() {
+      return statuses[Math.floor(Math.random() * statuses.length)];
+    }
+    
+    // Generate initial table with rows
+    function createBackgroundTable() {
+      const rows = [];
+      // Number of rows to fill the background nicely (adjust as needed)
+      const totalRows = 25;
+      for (let i = 0; i < totalRows; i++) {
+        rows.push(`
+          <tr>
+            <td>${getRandomId()}</td>
+            <td>${getRandomUsername()}</td>
+            <td>${getRandomDate()}</td>
+            <td>${getRandomStatus()}</td>
+          </tr>
+        `);
+      }
+      bgContainer.innerHTML = `
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Last Seen</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.join('')}
+          </tbody>
+        </table>
+      `;
+    }
+    
+    // Update a random subset of rows every 3 seconds
+    function updateRandomRows() {
+      const table = bgContainer.querySelector('table');
+      if (!table) return;
+      const allRows = table.querySelectorAll('tbody tr');
+      if (allRows.length === 0) return;
+      
+      // Pick 5 random rows to update (can be adjusted)
+      const rowsToUpdate = 5;
+      const indexes = new Set();
+      while (indexes.size < rowsToUpdate && indexes.size < allRows.length) {
+        indexes.add(Math.floor(Math.random() * allRows.length));
+      }
+      
+      indexes.forEach(i => {
+        const row = allRows[i];
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 4) {
+          cells[0].textContent = getRandomId();
+          cells[1].textContent = getRandomUsername();
+          cells[2].textContent = getRandomDate();
+          cells[3].textContent = getRandomStatus();
+        }
+      });
+    }
+    
+    // Initial setup
+    createBackgroundTable();
+    setInterval(updateRandomRows, 3000);
+
+    // ===================== SEARCH FUNCTIONALITY =====================
     let database = [];
     fetch('data.json')
       .then(response => response.json())
@@ -38,7 +135,6 @@
       container.innerHTML = '';
       if (!input) return;
 
-      // Search in the local database (case-insensitive)
       const entry = database.find(item => item.robloxUsername.toLowerCase() === input.toLowerCase());
 
       if (!entry) {
@@ -49,7 +145,6 @@
       let userId = entry.robloxUserId;
       let avatarUrl = entry.avatarUrl || '';
 
-      // If userId or avatar URL is missing, fetch from Roblox API
       if (!userId || !avatarUrl) {
         try {
           const userResponse = await fetch('https://users.roblox.com/v1/usernames/users', {
@@ -68,7 +163,6 @@
         }
       }
 
-      // Build the result view
       let html = `
         <div class="result">
           <div class="profile-header">
@@ -96,7 +190,6 @@
       container.innerHTML = html;
     }
 
-    // Basic XSS prevention
     function escapeHtml(text) {
       const map = {
         '&': '&amp;',
