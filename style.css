@@ -15,7 +15,7 @@ body {
 /* ==================== ANIMATED DATABASE BACKGROUND ==================== */
 .bg-database {
   position: fixed;
-  top: 50px;
+  top: -50px;
   left: 0;
   width: 100%;
   height: 100%;
@@ -42,7 +42,7 @@ body {
   color: #909090;
   text-shadow: 0 0 5px #1aff80;
   transform: rotate(0deg);
-  filter: blur(4px);           /* Desenfoque suave: antes era 12px, ahora más legible */
+  filter: blur(5px);           /* Desenfoque suave: antes era 12px, ahora más legible */
   text-align: center;
   margin: auto;
 }
