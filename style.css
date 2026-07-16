@@ -41,8 +41,8 @@ body {
   font-size: 2rem;
   color: #1aff80;
   text-shadow: 0 0 5px #1aff80;
-  transform: rotate(-5deg);
-  filter: blur(3px);           /* Desenfoque suave: antes era 12px, ahora más legible */
+  transform: rotate(0deg);
+  filter: blur(4px);           /* Desenfoque suave: antes era 12px, ahora más legible */
   text-align: center;
   margin: auto;
 }
