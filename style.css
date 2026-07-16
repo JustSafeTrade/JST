@@ -38,7 +38,7 @@ body {
   width: 100%;                  /* Ocupa casi todo el ancho, reduce los espacios laterales */
   max-width: 100%;           /* Limita el ancho máximo para pantallas muy grandes */
   font-family: 'Courier New', monospace;
-  font-size: 1.2rem;
+  font-size: 2rem;
   color: #1aff80;
   text-shadow: 0 0 5px #1aff80;
   transform: rotate(-15deg);
