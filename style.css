@@ -39,7 +39,7 @@ body {
   max-width: 150%;           /* Limita el ancho máximo para pantallas muy grandes */
   font-family: 'Courier New', monospace;
   font-size: 2rem;
-  color: #ffd796;
+  color: #bc96ff;
   transform: rotate(-5deg);
   filter: blur(4px);           /* Desenfoque suave: antes era 12px, ahora más legible */
   text-align: center;
