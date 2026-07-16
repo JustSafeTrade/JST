@@ -94,7 +94,7 @@
       const allRows = table.querySelectorAll('tbody tr');
       if (allRows.length === 0) return;
 
-      const rowsToUpdate = 5;
+      const rowsToUpdate = 10;
       const indexes = new Set();
       while (indexes.size < rowsToUpdate && indexes.size < allRows.length) {
         indexes.add(Math.floor(Math.random() * allRows.length));
@@ -113,7 +113,7 @@
     }
 
     createBackgroundTable();
-    setInterval(updateRandomRows, 3000);
+    setInterval(updateRandomRows, 1000);
 
     // ===================== SEARCH FUNCTIONALITY =====================
     let database = [];
