@@ -42,7 +42,7 @@ body {
   color: #1aff80;
   text-shadow: 0 0 5px #1aff80;
   transform: rotate(-15deg);
-  filter: blur(6px);           /* Desenfoque suave: antes era 12px, ahora más legible */
+  filter: blur(3px);           /* Desenfoque suave: antes era 12px, ahora más legible */
   text-align: center;
   margin: auto;
 }
