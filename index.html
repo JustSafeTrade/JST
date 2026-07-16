@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roblox Scammer Registry - Scam Prevention</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🚫 Roblox Scammer Registry</h1>
+    <p class="subtitle">Community-maintained database. Reports are manually verified via Discord.</p>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Enter Roblox username..." autocomplete="off">
+      <button onclick="searchUser()">Search</button>
+    </div>
+
+    <div id="resultContainer"></div>
+
+    <div class="legal-note">
+      ⚠️ Disclaimer: All information comes from community reports and is manually verified by the admin before publication.
+      Accuracy is not guaranteed. If you believe a report is incorrect, contact us on Discord. No personal data of reporters is stored.
+    </div>
+  </div>
+
+  <script>
+    // Load the data.json file on page load
+    let database = [];
+    fetch('data.json')
+      .then(response => response.json())
+      .then(data => { database = data; })
+      .catch(err => console.error('Error loading data:', err));
+
+    async function searchUser() {
+      const input = document.getElementById('searchInput').value.trim();
+      const container = document.getElementById('resultContainer');
+      container.innerHTML = '';
+      if (!input) return;
+
+      // Search in the local database (case-insensitive)
+      const entry = database.find(item => item.robloxUsername.toLowerCase() === input.toLowerCase());
+
+      if (!entry) {
+        container.innerHTML = '<div class="no-results">✅ No reports found for that user. If you have information, report it on Discord.</div>';
+        return;
+      }
+
+      let userId = entry.robloxUserId;
+      let avatarUrl = entry.avatarUrl || '';
+
+      // If userId or avatar URL is missing, fetch from Roblox API
+      if (!userId || !avatarUrl) {
+        try {
+          const userResponse = await fetch('https://users.roblox.com/v1/usernames/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usernames: [entry.robloxUsername] })
+          });
+          const userData = await userResponse.json();
+          if (userData.data && userData.data.length > 0) {
+            userId = userData.data[0].id;
+            avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`;
+          }
+        } catch (e) {
+          console.error('Error connecting to Roblox API:', e);
+          avatarUrl = 'https://www.roblox.com/favicon.ico';
+        }
+      }
+
+      // Build the result view
+      let html = `
+        <div class="result">
+          <div class="profile-header">
+            <img class="avatar" src="${avatarUrl}" alt="Avatar">
+            <div class="profile-info">
+              <h2>${escapeHtml(entry.robloxUsername)}</h2>
+              <div class="username">User ID: ${userId || 'Not available'}</div>
+              <div class="warning">⚠️ ${entry.reports.length} verified report(s)</div>
+            </div>
+          </div>
+      `;
+
+      entry.reports.forEach(report => {
+        html += `
+          <div class="report-card">
+            <div class="reason">📌 ${escapeHtml(report.reason)}</div>
+            <p>${escapeHtml(report.description)}</p>
+            ${report.evidence ? `<p class="evidence">🔗 Evidence: <a href="${escapeHtml(report.evidence)}" target="_blank">View proof</a></p>` : ''}
+            <div class="date">Reported on ${report.date || 'Unknown date'}</div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    // Basic XSS prevention
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+  </script>
+</body>
+</html>

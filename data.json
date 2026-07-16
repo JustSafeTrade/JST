@@ -1,0 +1,34 @@
+[
+  {
+    "robloxUsername": "ExampleScammer1",
+    "robloxUserId": 123456789,
+    "avatarUrl": "",
+    "reports": [
+      {
+        "reason": "Phishing / Account theft",
+        "description": "Sent a fake Roblox link via in-game chat promising free Robux. Stole a minor's account.",
+        "evidence": "https://imgur.com/a/evidence123",
+        "date": "2026-07-10"
+      }
+    ]
+  },
+  {
+    "robloxUsername": "ScamMaster99",
+    "robloxUserId": 987654321,
+    "avatarUrl": "",
+    "reports": [
+      {
+        "reason": "Trade scam",
+        "description": "Offered limited items and did not deliver after receiving payment.",
+        "evidence": "https://youtube.com/watch?v=exampleID",
+        "date": "2026-07-12"
+      },
+      {
+        "reason": "Impersonation",
+        "description": "Posed as an admin to ask for passwords.",
+        "evidence": "https://discord.com/channels/...",
+        "date": "2026-07-14"
+      }
+    ]
+  }
+]

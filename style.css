@@ -1,0 +1,132 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #e94560;
+}
+
+.subtitle {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.search-box {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #16213e;
+  color: #eee;
+  font-size: 1rem;
+}
+
+.search-box button {
+  padding: 0.75rem 1.5rem;
+  background: #e94560;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.result {
+  background: #0f3460;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #e94560;
+}
+
+.profile-info h2 {
+  margin-bottom: 0.25rem;
+}
+
+.profile-info .username {
+  color: #ccc;
+}
+
+.warning {
+  background: #e94560;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  display: inline-block;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.report-card {
+  background: #16213e;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.report-card .reason {
+  font-weight: bold;
+  color: #e94560;
+}
+
+.report-card .date {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.3rem;
+}
+
+.evidence a {
+  color: #0f9;
+  text-decoration: none;
+}
+
+.no-results, .error {
+  text-align: center;
+  padding: 2rem;
+  color: #aaa;
+}
+
+.legal-note {
+  margin-top: 3rem;
+  font-size: 0.75rem;
+  color: #555;
+  border-top: 1px solid #333;
+  padding-top: 1rem;
+}
