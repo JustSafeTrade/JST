@@ -42,7 +42,7 @@ body {
   color: #1aff80;
   text-shadow: 0 0 5px #1aff80;
   transform: rotate(-15deg);   /* Inclinación a la izquierda */
-  filter: blur(12px);          /* Desenfoque fuerte */
+  filter: blur(5px);          /* Desenfoque fuerte */
   text-align: center;
   margin: auto;
 }
