@@ -35,8 +35,8 @@ body {
 
 .db-table {
   border-collapse: collapse;
-  width: 95%;                  /* Ocupa casi todo el ancho, reduce los espacios laterales */
-  max-width: 1400px;           /* Limita el ancho máximo para pantallas muy grandes */
+  width: 100%;                  /* Ocupa casi todo el ancho, reduce los espacios laterales */
+  max-width: 100%;           /* Limita el ancho máximo para pantallas muy grandes */
   font-family: 'Courier New', monospace;
   font-size: 1.2rem;
   color: #1aff80;
