@@ -39,7 +39,7 @@ body {
   max-width: 150%;           /* Limita el ancho máximo para pantallas muy grandes */
   font-family: 'Courier New', monospace;
   font-size: 2rem;
-  color: #ffffff;
+  color: #ffe5ba;
   transform: rotate(-5deg);
   filter: blur(4px);           /* Desenfoque suave: antes era 12px, ahora más legible */
   text-align: center;
@@ -55,7 +55,7 @@ body {
 
 .db-table th {
   background: rgba(0,0,0,0.3);
-  letter-spacing: 2px;
+  letter-spacing: 5px;
 }
 
 .username-cell {
