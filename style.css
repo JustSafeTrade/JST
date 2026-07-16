@@ -35,13 +35,13 @@ body {
 
 .db-table {
   border-collapse: collapse;
-  width: 100%;                  /* Ocupa casi todo el ancho, reduce los espacios laterales */
-  max-width: 100%;           /* Limita el ancho máximo para pantallas muy grandes */
+  width: 150%;                  /* Ocupa casi todo el ancho, reduce los espacios laterales */
+  max-width: 150%;           /* Limita el ancho máximo para pantallas muy grandes */
   font-family: 'Courier New', monospace;
   font-size: 2rem;
   color: #1aff80;
   text-shadow: 0 0 5px #1aff80;
-  transform: rotate(-15deg);
+  transform: rotate(-10deg);
   filter: blur(3px);           /* Desenfoque suave: antes era 12px, ahora más legible */
   text-align: center;
   margin: auto;
