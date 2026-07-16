@@ -41,7 +41,7 @@ body {
   font-size: 2rem;
   color: #1aff80;
   text-shadow: 0 0 5px #1aff80;
-  transform: rotate(-10deg);
+  transform: rotate(-5deg);
   filter: blur(3px);           /* Desenfoque suave: antes era 12px, ahora más legible */
   text-align: center;
   margin: auto;
@@ -56,7 +56,7 @@ body {
 
 .db-table th {
   background: rgba(0,0,0,0.3);
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .username-cell {
