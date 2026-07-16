@@ -21,37 +21,46 @@ body {
   height: 100%;
   z-index: -1;
   overflow: hidden;
-  filter: blur(8px);          /* Fuerte desenfoque */
-  opacity: 0.2;               /* Muy sutil para que no moleste */
-  pointer-events: none;       /* No interfiere con los clics */
+  opacity: 0.08;               /* Muy tenue */
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #050510;        /* Fondo muy oscuro de base */
+  background: transparent;
 }
 
 .db-table {
   border-collapse: collapse;
-  width: 90%;
-  max-width: 1200px;
+  width: 80%;
+  max-width: 1000px;
   font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  color: #1aff80;             /* Verde terminal */
-  text-shadow: 0 0 3px #1aff80;
-  user-select: none;
+  font-size: 1.2rem;           /* Texto más grande para que el blur lo difumine bien */
+  color: #1aff80;
+  text-shadow: 0 0 5px #1aff80;
+  transform: rotate(-15deg);   /* Inclinación a la izquierda */
+  filter: blur(12px);          /* Desenfoque fuerte */
+  text-align: center;
+  margin: auto;
 }
 
-.db-table th, .db-table td {
-  padding: 6px 12px;
-  text-align: left;
-  border-bottom: 1px solid #1aff8040;
+.db-table th,
+.db-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(26, 255, 128, 0.3);
+  font-weight: bold;           /* Negrita para resaltar */
 }
 
 .db-table th {
-  background: rgba(0,0,0,0.4);
-  color: #1aff80;
-  font-weight: bold;
+  background: rgba(0,0,0,0.3);
   letter-spacing: 1px;
+}
+
+.username-cell {
+  font-weight: 900;            /* Extra negrita en los nombres */
 }
 
 /* ==================== MAIN CONTAINER ==================== */
