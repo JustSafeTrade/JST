@@ -60,7 +60,7 @@
 
     function createBackgroundTable() {
       const rows = [];
-      const totalRows = 30;
+      const totalRows = 50;
       for (let i = 0; i < totalRows; i++) {
         rows.push(`
           <tr>
@@ -103,7 +103,7 @@
       indexes.forEach(i => {
         const row = allRows[i];
         const cells = row.querySelectorAll('td');
-        if (cells.length >= 4) {
+        if (cells.length >= 5) {
           cells[0].textContent = getRandomId();
           cells[1].textContent = getRandomUsername();
           cells[2].textContent = getRandomDate();
@@ -113,7 +113,7 @@
     }
 
     createBackgroundTable();
-    setInterval(updateRandomRows, 1000);
+    setInterval(updateRandomRows, 2000);
 
     // ===================== SEARCH FUNCTIONALITY =====================
     let database = [];
