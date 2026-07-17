@@ -16,7 +16,7 @@
     <p class="subtitle">Community-maintained scammer registry. Reports are verified manually via Discord.</p>
 
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search by Roblox ID, username, Discord, Facebook, bank account..." autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Search by Roblox ID, username, Discord, Facebook, Bank, Payment Method..." autocomplete="off">
       <button onclick="searchUser()">Search</button>
     </div>
 
@@ -87,9 +87,9 @@
     setInterval(updateRandomRows, 2000);
 
     // ===================== ANIMATED TITLE =====================
-    const phrases = ["JST", "Just Safe Trade", "For Everyone"];
+    const phrases = ["Just Safe Trade", "For Everyone", "JST"];
     let phraseIndex = 0, charIndex = 0, isDeleting = false;
-    const typingSpeed = 100, deletingSpeed = 100, pauseBetween = 5000;
+    const typingSpeed = 100, deletingSpeed = 50, pauseBetween = 5000;
     const textElement = document.getElementById('animatedText');
 
     function typeLoop() {
@@ -156,7 +156,7 @@
       }
 
       if (!entry) {
-        container.innerHTML = '<div class="no-results">✅ No reports found for that user. If you have information, report it on Discord.</div>';
+        container.innerHTML = '<div class="no-results">✅ No reports found for that user. Make sure to type correctly, if you have information, report it on Discord.</div>';
         mainContainer.classList.add('results-visible');
         return;
       }
