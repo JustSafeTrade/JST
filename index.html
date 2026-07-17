@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roblox Scammer Registry - Scam Prevention</title>
+  <title>JST - Just Safe Trade</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,8 +12,11 @@
 
   <!-- MAIN CONTENT -->
   <div class="container">
-    <h1>🚫 Roblox Scammer Registry</h1>
-    <p class="subtitle">Community-maintained database. Reports are manually verified via Discord.</p>
+    <!-- ANIMATED TITLE -->
+    <h1 class="animated-heading">
+      <span id="animatedText"></span><span class="cursor">_</span>
+    </h1>
+    <p class="subtitle">Just Safe Trade — Community-maintained scammer registry. Reports verified manually via Discord.</p>
 
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Enter Roblox username..." autocomplete="off">
@@ -115,6 +118,44 @@
     createBackgroundTable();
     setInterval(updateRandomRows, 2000);
 
+    // ===================== ANIMATED TITLE =====================
+    const phrases = ["JST", "Just Safe Trade"];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typingSpeed = 100;
+    const deletingSpeed = 50;
+    const pauseBetween = 2000;
+    const textElement = document.getElementById('animatedText');
+
+    function typeLoop() {
+      const currentPhrase = phrases[phraseIndex];
+      
+      if (!isDeleting) {
+        textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+        
+        if (charIndex === currentPhrase.length) {
+          isDeleting = true;
+          setTimeout(typeLoop, pauseBetween);
+          return;
+        }
+      } else {
+        textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+        
+        if (charIndex === 0) {
+          isDeleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+        }
+      }
+      
+      const delay = isDeleting ? deletingSpeed : typingSpeed;
+      setTimeout(typeLoop, delay);
+    }
+
+    setTimeout(typeLoop, 500);
+
     // ===================== SEARCH FUNCTIONALITY =====================
     let database = [];
     fetch('data.json')
@@ -125,13 +166,19 @@
     async function searchUser() {
       const input = document.getElementById('searchInput').value.trim();
       const container = document.getElementById('resultContainer');
+      const mainContainer = document.querySelector('.container');
       container.innerHTML = '';
-      if (!input) return;
+      
+      if (!input) {
+        mainContainer.classList.remove('results-visible');
+        return;
+      }
 
       const entry = database.find(item => item.robloxUsername.toLowerCase() === input.toLowerCase());
 
       if (!entry) {
         container.innerHTML = '<div class="no-results">✅ No reports found for that user. If you have information, report it on Discord.</div>';
+        mainContainer.classList.add('results-visible');
         return;
       }
 
@@ -181,6 +228,7 @@
 
       html += `</div>`;
       container.innerHTML = html;
+      mainContainer.classList.add('results-visible');
     }
 
     function escapeHtml(text) {
