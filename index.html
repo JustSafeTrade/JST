@@ -184,17 +184,40 @@
       const query = input.toLowerCase();
       
       let entry = null;
-      
+      let matchField = null;
+
       if (isId) {
         entry = database.find(item => String(item.robloxUserId) === query);
+        if (entry) matchField = 'robloxUserId';
       } else {
         entry = database.find(item => {
-          if (item.knownUsernames.some(name => name.toLowerCase() === query)) return true;
+          if (item.knownUsernames.some(name => name.toLowerCase() === query)) {
+            matchField = 'robloxUsername';
+            return true;
+          }
           if (item.additionalInfo) {
             const info = item.additionalInfo;
-            if (info.facebook && info.facebook.toLowerCase().includes(query)) return true;
-            if (info.discord && info.discord.toLowerCase().includes(query)) return true;
-            if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(query))) return true;
+            // Facebook (nombre o url)
+            if (info.facebook) {
+              const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
+              const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
+              if (fbName && fbName.toLowerCase().includes(query)) {
+                matchField = 'facebook';
+                return true;
+              }
+              if (fbUrl && fbUrl.toLowerCase().includes(query)) {
+                matchField = 'facebook';
+                return true;
+              }
+            }
+            if (info.discord && info.discord.toLowerCase().includes(query)) {
+              matchField = 'discord';
+              return true;
+            }
+            if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(query))) {
+              matchField = 'bankAccount';
+              return true;
+            }
           }
           return false;
         });
@@ -208,14 +231,40 @@
 
       const knownUsernames = entry.knownUsernames.map(name => escapeHtml(name)).join(', ');
       
-      // Construir información adicional con Facebook clickable
+      // Destacar el campo coincidente
+      let matchHtml = '';
+      if (matchField === 'robloxUserId') {
+        matchHtml = `<div class="match-highlight">🔍 Match found: Roblox ID <strong>${escapeHtml(String(entry.robloxUserId))}</strong></div>`;
+      } else if (matchField === 'robloxUsername') {
+        const matchedName = entry.knownUsernames.find(name => name.toLowerCase() === query);
+        matchHtml = `<div class="match-highlight">🔍 Match found: Roblox username <strong>${escapeHtml(matchedName)}</strong></div>`;
+      } else if (matchField === 'facebook') {
+        const fb = entry.additionalInfo.facebook;
+        const fbName = typeof fb === 'object' ? fb.name : fb;
+        const fbUrl = typeof fb === 'object' ? fb.url : fb;
+        matchHtml = `<div class="match-highlight">🔍 Match found: Facebook account <strong>${escapeHtml(fbName || fbUrl)}</strong></div>`;
+      } else if (matchField === 'discord') {
+        matchHtml = `<div class="match-highlight">🔍 Match found: Discord <strong>${escapeHtml(entry.additionalInfo.discord)}</strong></div>`;
+      } else if (matchField === 'bankAccount') {
+        const matchedBank = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(query));
+        matchHtml = `<div class="match-highlight">🔍 Match found: Bank account <strong>${escapeHtml(matchedBank)}</strong></div>`;
+      }
+
+      // Información adicional (debajo de la cabecera)
       let additionalInfoHtml = '';
       if (entry.additionalInfo) {
         const info = entry.additionalInfo;
         if (info.facebook) {
-          // Convertir el texto de Facebook en un enlace
-          const fbUrl = info.facebook.startsWith('http') ? info.facebook : `https://${info.facebook}`;
-          additionalInfoHtml += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> <a href="${escapeHtml(fbUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(info.facebook)}</a></div>`;
+          const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
+          const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
+          const displayName = fbName || fbUrl;
+          const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
+          additionalInfoHtml += `
+            <div class="info-item">
+              <span class="info-label">🔵 Facebook:</span>
+              <span class="info-value">${escapeHtml(displayName)}</span>
+              <a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer" class="info-link">[Verify]</a>
+            </div>`;
         }
         if (info.discord) {
           additionalInfoHtml += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
@@ -228,6 +277,7 @@
 
       let html = `
         <div class="result">
+          ${matchHtml}
           <div class="profile-header">
             <div class="warning-icon">⚠️</div>
             <div class="profile-info">

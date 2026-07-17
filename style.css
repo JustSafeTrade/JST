@@ -302,3 +302,51 @@ body {
   padding-top: 1rem;
   text-align: center;
 }
+
+/* ==================== MATCH HIGHLIGHT ==================== */
+.match-highlight {
+  background: rgba(123, 31, 162, 0.3);
+  border-left: 4px solid #b388ff;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #ddd;
+}
+
+.match-highlight strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ==================== REASON EN ROJO ==================== */
+.report-card .reason {
+  font-weight: bold;
+  color: #e94560;
+}
+
+/* ==================== INFO LINK (VERIFY) ==================== */
+.info-link {
+  color: #ba68c8;
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.info-link:hover {
+  text-decoration: underline;
+}
+
+/* Ajustes menores para la info adicional */
+.info-item {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+.info-label {
+  font-weight: bold;
+  color: #ce93d8;
+  margin-right: 0.5rem;
+}
+.info-value {
+  color: #eee;
+}
