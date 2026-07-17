@@ -127,11 +127,9 @@
       let entry = null, matchField = null;
 
       if (isId) {
-        // Búsqueda exacta por ID numérico
         entry = database.find(item => String(item.robloxUserId) === query);
         if (entry) matchField = 'robloxUserId';
       } else {
-        // Para texto, primero nombre de Roblox (coincidencia exacta)
         entry = database.find(item => {
           if (item.knownUsernames.some(name => name.toLowerCase() === query)) {
             matchField = 'robloxUsername';
@@ -139,7 +137,6 @@
           }
           return false;
         });
-        // Solo buscar en info adicional si el texto tiene al menos 3 caracteres
         if (!entry && query.length >= 3) {
           entry = database.find(item => {
             if (item.additionalInfo) {
@@ -179,13 +176,18 @@
         matchHtml = `<div class="match-highlight">🔍 Match found: Discord <strong>${escapeHtml(entry.additionalInfo.discord)}</strong></div>`;
       } else if (matchField === 'bankAccount') {
         const matchedBank = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(query));
-        matchHtml = `<div class="match-highlight">🔍 Match found: Bank account <strong>${escapeHtml(matchedBank)}</strong></div>`;
+        matchHtml = `<div class="match-highlight">🔍 Match found: Payment method <strong>${escapeHtml(matchedBank)}</strong></div>`;
       }
 
       // --- Unified information block ---
-      let infoItems = '';
       const knownUsernames = entry.knownUsernames.join(', ');
-      infoItems += `<div class="info-item"><span class="info-label">🎮 Roblox:</span> ID ${escapeHtml(String(entry.robloxUserId))} (known as: ${escapeHtml(knownUsernames)})</div>`;
+      const robloxProfileUrl = `https://www.roblox.com/users/${entry.robloxUserId}/profile`;
+      let infoItems = `
+        <div class="info-item">
+          <span class="info-label">🎮 Roblox:</span>
+          <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer">ID ${escapeHtml(String(entry.robloxUserId))}</a>
+          (known as: ${escapeHtml(knownUsernames)})
+        </div>`;
 
       if (entry.additionalInfo) {
         const info = entry.additionalInfo;
@@ -193,20 +195,27 @@
           const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
           const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
           const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
-          infoItems += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> <a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>${fbName ? ' (' + escapeHtml(fbName) + ')' : ''}</div>`;
+          // Mostrar nombre primero, luego el link
+          const namePart = fbName ? escapeHtml(fbName) : '';
+          const linkPart = `<a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>`;
+          infoItems += `
+            <div class="info-item">
+              <span class="info-label">🔵 Facebook:</span>
+              ${namePart} ${namePart ? '(' : ''}${linkPart}${namePart ? ')' : ''}
+            </div>`;
         }
         if (info.discord) {
           infoItems += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
         }
         if (info.bankAccounts && info.bankAccounts.length > 0) {
-          const banks = info.bankAccounts.map(b => escapeHtml(b)).join(', ');
-          infoItems += `<div class="info-item"><span class="info-label">🏦 Bank Accounts:</span> ${banks}</div>`;
+          const methods = info.bankAccounts.map(b => escapeHtml(b)).join(', ');
+          infoItems += `<div class="info-item"><span class="info-label">💳 Payment Methods:</span> ${methods}</div>`;
         }
       }
 
-      // --- Reportes con espaciado ---
+      // --- Reportes ---
       let reportsHtml = '<h3 class="reports-heading">Reports:</h3>';
-      entry.reports.forEach((report, index) => {
+      entry.reports.forEach(report => {
         reportsHtml += `
           <div class="report-card">
             <div class="reason">📌 ${escapeHtml(report.reason)}</div>
