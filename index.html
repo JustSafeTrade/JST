@@ -7,12 +7,9 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- BACKGROUND: Animated blurred database -->
   <div class="bg-database" id="bgDatabase"></div>
 
-  <!-- MAIN CONTENT -->
   <div class="container">
-    <!-- ANIMATED TITLE -->
     <h1 class="animated-heading">
       <span id="animatedText"></span><span class="cursor">_</span>
     </h1>
@@ -32,9 +29,8 @@
   </div>
 
   <script>
-    // ===================== BACKGROUND ANIMATION =====================
+    // ===================== BACKGROUND ANIMATION (sin cambios) =====================
     const bgContainer = document.getElementById('bgDatabase');
-
     const prefixes = ['xX', 'Pro', 'Noob', 'Dark', 'Epic', 'Master', 'Shadow', 'Blaze', 'Frost', 'Cyber', 'Ninja', 'Pixel', 'King', 'Queen', 'Lord', 'Mega', 'Ultra', 'Hyper', 'Zero', 'Max'];
     const suffixes = ['_Gamer', '_YT', '_Roblox', '123', '456', '789', '2000', '2024', 'Playz', 'Fan', 'Boy', 'Girl', 'Man', 'Pro', 'X', 'Z', 'Slayer', 'Hunter', 'Wizard', 'Dragon'];
     const statuses = ['Active', 'Offline', 'Banned', 'Pending', 'Verified', 'Scam Watch'];
@@ -45,67 +41,40 @@
       const number = Math.floor(Math.random() * 9999);
       return `${prefix}${suffix}${number}`;
     }
-
-    function getRandomId() {
-      return Math.floor(Math.random() * 900000000) + 100000000;
-    }
-
+    function getRandomId() { return Math.floor(Math.random() * 900000000) + 100000000; }
     function getRandomDate() {
       const year = 2024 + Math.floor(Math.random() * 3);
       const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
       const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
       return `${year}-${month}-${day}`;
     }
-
-    function getRandomStatus() {
-      return statuses[Math.floor(Math.random() * statuses.length)];
-    }
+    function getRandomStatus() { return statuses[Math.floor(Math.random() * statuses.length)]; }
 
     function createBackgroundTable() {
       const rows = [];
-      const totalRows = 30;
-      for (let i = 0; i < totalRows; i++) {
-        rows.push(`
-          <tr>
+      for (let i = 0; i < 30; i++) {
+        rows.push(`<tr>
             <td>${getRandomId()}</td>
             <td class="username-cell">${getRandomUsername()}</td>
             <td>${getRandomDate()}</td>
             <td>${getRandomStatus()}</td>
-          </tr>
-        `);
+          </tr>`);
       }
       bgContainer.innerHTML = `
         <table class="db-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Username</th>
-              <th>Last Seen</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.join('')}
-          </tbody>
-        </table>
-      `;
+          <thead><tr><th>ID</th><th>Username</th><th>Last Seen</th><th>Status</th></tr></thead>
+          <tbody>${rows.join('')}</tbody>
+        </table>`;
     }
-
     function updateRandomRows() {
       const table = bgContainer.querySelector('table');
       if (!table) return;
       const allRows = table.querySelectorAll('tbody tr');
-      if (allRows.length === 0) return;
-
       const rowsToUpdate = 10;
       const indexes = new Set();
-      while (indexes.size < rowsToUpdate && indexes.size < allRows.length) {
-        indexes.add(Math.floor(Math.random() * allRows.length));
-      }
-
+      while (indexes.size < rowsToUpdate && indexes.size < allRows.length) indexes.add(Math.floor(Math.random() * allRows.length));
       indexes.forEach(i => {
-        const row = allRows[i];
-        const cells = row.querySelectorAll('td');
+        const cells = allRows[i].querySelectorAll('td');
         if (cells.length >= 4) {
           cells[0].textContent = getRandomId();
           cells[1].textContent = getRandomUsername();
@@ -114,59 +83,36 @@
         }
       });
     }
-
     createBackgroundTable();
     setInterval(updateRandomRows, 2000);
 
     // ===================== ANIMATED TITLE =====================
     const phrases = ["JST", "Just Safe Trade"];
-    let phraseIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    const typingSpeed = 100;
-    const deletingSpeed = 50;
-    const pauseBetween = 2000;
+    let phraseIndex = 0, charIndex = 0, isDeleting = false;
+    const typingSpeed = 100, deletingSpeed = 50, pauseBetween = 2000;
     const textElement = document.getElementById('animatedText');
 
     function typeLoop() {
       const currentPhrase = phrases[phraseIndex];
-      
       if (!isDeleting) {
         textElement.textContent = currentPhrase.substring(0, charIndex + 1);
         charIndex++;
-        
-        if (charIndex === currentPhrase.length) {
-          isDeleting = true;
-          setTimeout(typeLoop, pauseBetween);
-          return;
-        }
+        if (charIndex === currentPhrase.length) { isDeleting = true; setTimeout(typeLoop, pauseBetween); return; }
       } else {
         textElement.textContent = currentPhrase.substring(0, charIndex - 1);
         charIndex--;
-        
-        if (charIndex === 0) {
-          isDeleting = false;
-          phraseIndex = (phraseIndex + 1) % phrases.length;
-        }
+        if (charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; }
       }
-      
-      const delay = isDeleting ? deletingSpeed : typingSpeed;
-      setTimeout(typeLoop, delay);
+      setTimeout(typeLoop, isDeleting ? deletingSpeed : typingSpeed);
     }
-
     setTimeout(typeLoop, 500);
 
     // ===================== SEARCH FUNCTIONALITY =====================
     let database = [];
-    fetch('data.json')
-      .then(response => response.json())
-      .then(data => { database = data; })
-      .catch(err => console.error('Error loading data:', err));
+    fetch('data.json').then(r => r.json()).then(d => database = d).catch(e => console.error(e));
 
-    document.getElementById('searchInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        searchUser();
-      }
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') searchUser();
     });
 
     async function searchUser() {
@@ -174,49 +120,28 @@
       const container = document.getElementById('resultContainer');
       const mainContainer = document.querySelector('.container');
       container.innerHTML = '';
-      
-      if (!input) {
-        mainContainer.classList.remove('results-visible');
-        return;
-      }
+      if (!input) { mainContainer.classList.remove('results-visible'); return; }
 
       const isId = /^\d+$/.test(input);
       const query = input.toLowerCase();
-      
-      let entry = null;
-      let matchField = null;
+      let entry = null, matchField = null;
 
       if (isId) {
         entry = database.find(item => String(item.robloxUserId) === query);
         if (entry) matchField = 'robloxUserId';
       } else {
         entry = database.find(item => {
-          if (item.knownUsernames.some(name => name.toLowerCase() === query)) {
-            matchField = 'robloxUsername';
-            return true;
-          }
+          if (item.knownUsernames.some(name => name.toLowerCase() === query)) { matchField = 'robloxUsername'; return true; }
           if (item.additionalInfo) {
             const info = item.additionalInfo;
             if (info.facebook) {
               const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
               const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
-              if (fbName && fbName.toLowerCase().includes(query)) {
-                matchField = 'facebook';
-                return true;
-              }
-              if (fbUrl && fbUrl.toLowerCase().includes(query)) {
-                matchField = 'facebook';
-                return true;
-              }
+              if (fbName && fbName.toLowerCase().includes(query)) { matchField = 'facebook'; return true; }
+              if (fbUrl && fbUrl.toLowerCase().includes(query)) { matchField = 'facebook'; return true; }
             }
-            if (info.discord && info.discord.toLowerCase().includes(query)) {
-              matchField = 'discord';
-              return true;
-            }
-            if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(query))) {
-              matchField = 'bankAccount';
-              return true;
-            }
+            if (info.discord && info.discord.toLowerCase().includes(query)) { matchField = 'discord'; return true; }
+            if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(query))) { matchField = 'bankAccount'; return true; }
           }
           return false;
         });
@@ -228,140 +153,69 @@
         return;
       }
 
-      const knownUsernames = entry.knownUsernames.map(name => escapeHtml(name)).join(', ');
-      
-      // --- Construir la parte principal según lo que coincidió ---
-      let primaryHtml = '';
-      let robloxSecondaryHtml = '';
-
-      if (matchField === 'robloxUserId' || matchField === 'robloxUsername') {
-        // Roblox es lo principal: mostramos la cabecera con icono y datos de Roblox
-        const matchedName = matchField === 'robloxUsername' ? entry.knownUsernames.find(name => name.toLowerCase() === query) : null;
-        primaryHtml = `
-          <div class="match-highlight">🔍 Match found: Roblox ${matchField === 'robloxUserId' ? 'ID' : 'username'} <strong>${escapeHtml(matchField === 'robloxUserId' ? String(entry.robloxUserId) : matchedName)}</strong></div>
-          <div class="profile-header">
-            <div class="warning-icon">⚠️</div>
-            <div class="profile-info">
-              <h2>User ID: ${escapeHtml(String(entry.robloxUserId))}</h2>
-              <div class="known-usernames">Known as: ${knownUsernames}</div>
-              <div class="warning">⚠️ ${entry.reports.length} verified report(s)</div>
-            </div>
-          </div>
-        `;
-      } else {
-        // Coincidencia no Roblox: la info de Roblox pasa a ser secundaria
-        let matchValue = '';
-        let matchType = '';
-        if (matchField === 'facebook') {
-          const fb = entry.additionalInfo.facebook;
-          const fbName = typeof fb === 'object' ? fb.name : fb;
-          const fbUrl = typeof fb === 'object' ? fb.url : fb;
-          matchValue = fbName || fbUrl;
-          matchType = 'Facebook account';
-          // Construir enlace verify
-          const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
-          primaryHtml = `
-            <div class="match-highlight">🔍 Match found: ${matchType} <strong>${escapeHtml(matchValue)}</strong></div>
-            <div class="primary-info">
-              <span class="info-label">🔵 Facebook:</span>
-              <span class="info-value">${escapeHtml(matchValue)}</span>
-              <a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer" class="info-link">[Verify]</a>
-            </div>
-          `;
-        } else if (matchField === 'discord') {
-          matchValue = entry.additionalInfo.discord;
-          matchType = 'Discord';
-          primaryHtml = `
-            <div class="match-highlight">🔍 Match found: ${matchType} <strong>${escapeHtml(matchValue)}</strong></div>
-            <div class="primary-info">
-              <span class="info-label">💬 Discord:</span>
-              <span class="info-value">${escapeHtml(matchValue)}</span>
-            </div>
-          `;
-        } else if (matchField === 'bankAccount') {
-          matchValue = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(query));
-          matchType = 'Bank account';
-          primaryHtml = `
-            <div class="match-highlight">🔍 Match found: ${matchType} <strong>${escapeHtml(matchValue)}</strong></div>
-            <div class="primary-info">
-              <span class="info-label">🏦 Bank Account:</span>
-              <span class="info-value">${escapeHtml(matchValue)}</span>
-            </div>
-          `;
-        }
-
-        // Sección secundaria: datos de Roblox
-        robloxSecondaryHtml = `
-          <div class="roblox-secondary">
-            <h3>Linked Roblox Account</h3>
-            <div class="profile-header">
-              <div class="warning-icon">⚠️</div>
-              <div class="profile-info">
-                <h2>User ID: ${escapeHtml(String(entry.robloxUserId))}</h2>
-                <div class="known-usernames">Known as: ${knownUsernames}</div>
-                <div class="warning">⚠️ ${entry.reports.length} verified report(s)</div>
-              </div>
-            </div>
-          </div>
-        `;
+      // --- Match highlight ---
+      let matchHtml = '';
+      if (matchField === 'robloxUserId') matchHtml = `<div class="match-highlight">🔍 Match found: Roblox ID <strong>${escapeHtml(String(entry.robloxUserId))}</strong></div>`;
+      else if (matchField === 'robloxUsername') {
+        const matched = entry.knownUsernames.find(n => n.toLowerCase() === query);
+        matchHtml = `<div class="match-highlight">🔍 Match found: Roblox username <strong>${escapeHtml(matched)}</strong></div>`;
+      } else if (matchField === 'facebook') {
+        const fb = entry.additionalInfo.facebook;
+        const fbName = typeof fb === 'object' ? fb.name : fb;
+        const fbUrl = typeof fb === 'object' ? fb.url : fb;
+        matchHtml = `<div class="match-highlight">🔍 Match found: Facebook account <strong>${escapeHtml(fbName || fbUrl)}</strong></div>`;
+      } else if (matchField === 'discord') {
+        matchHtml = `<div class="match-highlight">🔍 Match found: Discord <strong>${escapeHtml(entry.additionalInfo.discord)}</strong></div>`;
+      } else if (matchField === 'bankAccount') {
+        const matchedBank = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(query));
+        matchHtml = `<div class="match-highlight">🔍 Match found: Bank account <strong>${escapeHtml(matchedBank)}</strong></div>`;
       }
 
-      // Información adicional (solo si no se mostró como primaria)
-      let additionalInfoHtml = '';
-      if (entry.additionalInfo && matchField !== 'facebook' && matchField !== 'discord' && matchField !== 'bankAccount') {
-        // Si la coincidencia fue Roblox, mostramos todas las infos adicionales aquí
+      // --- Unified information block (todos los datos disponibles) ---
+      let infoItems = '';
+      const knownUsernames = entry.knownUsernames.join(', ');
+      infoItems += `<div class="info-item"><span class="info-label">🎮 Roblox:</span> ID ${escapeHtml(String(entry.robloxUserId))} (known as: ${escapeHtml(knownUsernames)}) <span class="report-count">⚠️ ${entry.reports.length} report(s)</span></div>`;
+
+      if (entry.additionalInfo) {
         const info = entry.additionalInfo;
         if (info.facebook) {
           const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
           const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
           const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
-          additionalInfoHtml += `
-            <div class="info-item">
-              <span class="info-label">🔵 Facebook:</span>
-              <span class="info-value">${escapeHtml(fbName || fbUrl)}</span>
-              <a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer" class="info-link">[Verify]</a>
-            </div>`;
+          infoItems += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> ${escapeHtml(fbName || fbUrl)} <a href="${escapeHtml(fbLink)}" target="_blank" class="info-link">[Verify]</a></div>`;
         }
         if (info.discord) {
-          additionalInfoHtml += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
+          infoItems += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
         }
         if (info.bankAccounts && info.bankAccounts.length > 0) {
           const banks = info.bankAccounts.map(b => escapeHtml(b)).join(', ');
-          additionalInfoHtml += `<div class="info-item"><span class="info-label">🏦 Bank Accounts:</span> ${banks}</div>`;
+          infoItems += `<div class="info-item"><span class="info-label">🏦 Bank Accounts:</span> ${banks}</div>`;
         }
       }
 
-      let html = `
-        <div class="result">
-          ${primaryHtml}
-          ${additionalInfoHtml ? `<div class="additional-info">${additionalInfoHtml}</div>` : ''}
-          ${robloxSecondaryHtml}
-      `;
-
+      // --- Reportes ---
+      let reportsHtml = '';
       entry.reports.forEach(report => {
-        html += `
+        reportsHtml += `
           <div class="report-card">
             <div class="reason">📌 ${escapeHtml(report.reason)}</div>
             <p>${escapeHtml(report.description)}</p>
             ${report.evidence ? `<p class="evidence">🔗 Evidence: <a href="${escapeHtml(report.evidence)}" target="_blank">View proof</a></p>` : ''}
             <div class="date">Reported on ${report.date || 'Unknown date'}</div>
-          </div>
-        `;
+          </div>`;
       });
 
-      html += `</div>`;
-      container.innerHTML = html;
+      container.innerHTML = `
+        <div class="result">
+          ${matchHtml}
+          <div class="info-block">${infoItems}</div>
+          ${reportsHtml}
+        </div>`;
       mainContainer.classList.add('results-visible');
     }
 
     function escapeHtml(text) {
-      const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      };
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
       return String(text).replace(/[&<>"']/g, m => map[m]);
     }
   </script>
