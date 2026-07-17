@@ -1,8 +1,7 @@
 [
   {
-    "robloxUsername": "mateo234c",
-    "robloxUserId": 740941836,
-    "avatarUrl": "",
+    "robloxUserId": 123456789,
+    "knownUsernames": ["ExampleScammer1", "ExScammerPro"],
     "reports": [
       {
         "reason": "Phishing / Account theft",
@@ -12,13 +11,9 @@
       }
     ]
   },
-
-
-
   {
-    "robloxUsername": "datos24",
-    "robloxUserId": 728402456,
-    "avatarUrl": "",
+    "robloxUserId": 987654321,
+    "knownUsernames": ["ScamMaster99", "MasterScam99", "ScamLord2024"],
     "reports": [
       {
         "reason": "Trade scam",

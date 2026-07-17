@@ -19,7 +19,7 @@
     <p class="subtitle">Just Safe Trade — Community-maintained scammer registry. Reports verified manually via Discord.</p>
 
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Enter Roblox username..." autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Search by username or Roblox ID..." autocomplete="off">
       <button onclick="searchUser()">Search</button>
     </div>
 
@@ -174,7 +174,21 @@
         return;
       }
 
-      const entry = database.find(item => item.robloxUsername.toLowerCase() === input.toLowerCase());
+      // Determinar si es un ID numérico
+      const isId = /^\d+$/.test(input);
+      const query = input.toLowerCase();
+      
+      let entry = null;
+      
+      if (isId) {
+        // Buscar por ID exacto
+        entry = database.find(item => String(item.robloxUserId) === query);
+      } else {
+        // Buscar por nombre (en la lista de knownUsernames, no case-sensitive)
+        entry = database.find(item => 
+          item.knownUsernames.some(name => name.toLowerCase() === query)
+        );
+      }
 
       if (!entry) {
         container.innerHTML = '<div class="no-results">✅ No reports found for that user. If you have information, report it on Discord.</div>';
@@ -182,48 +196,16 @@
         return;
       }
 
-      // Obtener el userId (desde el JSON o desde la API de Roblox si no existe)
-      let userId = entry.robloxUserId;
-      if (!userId) {
-        try {
-          const userResponse = await fetch('https://users.roblox.com/v1/usernames/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usernames: [entry.robloxUsername] })
-          });
-          const userData = await userResponse.json();
-          if (userData.data && userData.data.length > 0) {
-            userId = userData.data[0].id;
-          }
-        } catch (e) {
-          console.error('Error fetching user ID from Roblox:', e);
-        }
-      }
-
-      // Obtener el avatar usando la API de thumbnails (nuevo método correcto)
-      let avatarUrl = 'https://www.roblox.com/favicon.ico'; // fallback
-      if (userId) {
-        try {
-          const avatarResponse = await fetch(
-            `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`
-          );
-          const avatarData = await avatarResponse.json();
-          if (avatarData.data && avatarData.data.length > 0) {
-            avatarUrl = avatarData.data[0].imageUrl;
-          }
-        } catch (e) {
-          console.error('Error fetching avatar:', e);
-        }
-      }
-
       // Construir la vista de resultados
+      const knownUsernames = entry.knownUsernames.map(name => escapeHtml(name)).join(', ');
+      
       let html = `
         <div class="result">
           <div class="profile-header">
-            <img class="avatar" src="${avatarUrl}" alt="Avatar">
+            <div class="warning-icon">⚠️</div>
             <div class="profile-info">
-              <h2>${escapeHtml(entry.robloxUsername)}</h2>
-              <div class="username">User ID: ${userId || 'Not available'}</div>
+              <h2>User ID: ${escapeHtml(String(entry.robloxUserId))}</h2>
+              <div class="known-usernames">Known as: ${knownUsernames}</div>
               <div class="warning">⚠️ ${entry.reports.length} verified report(s)</div>
             </div>
           </div>
