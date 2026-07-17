@@ -127,24 +127,35 @@
       let entry = null, matchField = null;
 
       if (isId) {
+        // Búsqueda exacta por ID numérico
         entry = database.find(item => String(item.robloxUserId) === query);
         if (entry) matchField = 'robloxUserId';
       } else {
+        // Para texto, primero nombre de Roblox (coincidencia exacta)
         entry = database.find(item => {
-          if (item.knownUsernames.some(name => name.toLowerCase() === query)) { matchField = 'robloxUsername'; return true; }
-          if (item.additionalInfo) {
-            const info = item.additionalInfo;
-            if (info.facebook) {
-              const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
-              const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
-              if (fbName && fbName.toLowerCase().includes(query)) { matchField = 'facebook'; return true; }
-              if (fbUrl && fbUrl.toLowerCase().includes(query)) { matchField = 'facebook'; return true; }
-            }
-            if (info.discord && info.discord.toLowerCase().includes(query)) { matchField = 'discord'; return true; }
-            if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(query))) { matchField = 'bankAccount'; return true; }
+          if (item.knownUsernames.some(name => name.toLowerCase() === query)) {
+            matchField = 'robloxUsername';
+            return true;
           }
           return false;
         });
+        // Solo buscar en info adicional si el texto tiene al menos 3 caracteres
+        if (!entry && query.length >= 3) {
+          entry = database.find(item => {
+            if (item.additionalInfo) {
+              const info = item.additionalInfo;
+              if (info.facebook) {
+                const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
+                const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
+                if (fbName && fbName.toLowerCase().includes(query)) { matchField = 'facebook'; return true; }
+                if (fbUrl && fbUrl.toLowerCase().includes(query)) { matchField = 'facebook'; return true; }
+              }
+              if (info.discord && info.discord.toLowerCase().includes(query)) { matchField = 'discord'; return true; }
+              if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(query))) { matchField = 'bankAccount'; return true; }
+            }
+            return false;
+          });
+        }
       }
 
       if (!entry) {
@@ -171,7 +182,7 @@
         matchHtml = `<div class="match-highlight">🔍 Match found: Bank account <strong>${escapeHtml(matchedBank)}</strong></div>`;
       }
 
-      // --- Unified information block (sin el contador de reportes) ---
+      // --- Unified information block ---
       let infoItems = '';
       const knownUsernames = entry.knownUsernames.join(', ');
       infoItems += `<div class="info-item"><span class="info-label">🎮 Roblox:</span> ID ${escapeHtml(String(entry.robloxUserId))} (known as: ${escapeHtml(knownUsernames)})</div>`;
@@ -182,7 +193,6 @@
           const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
           const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
           const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
-          // Mostrar la URL como enlace, sin "[Verify]"
           infoItems += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> <a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>${fbName ? ' (' + escapeHtml(fbName) + ')' : ''}</div>`;
         }
         if (info.discord) {
@@ -194,9 +204,9 @@
         }
       }
 
-      // --- Reportes con título "Reports:" ---
+      // --- Reportes con espaciado ---
       let reportsHtml = '<h3 class="reports-heading">Reports:</h3>';
-      entry.reports.forEach(report => {
+      entry.reports.forEach((report, index) => {
         reportsHtml += `
           <div class="report-card">
             <div class="reason">📌 ${escapeHtml(report.reason)}</div>
