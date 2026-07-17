@@ -19,7 +19,7 @@
     <p class="subtitle">Just Safe Trade — Community-maintained scammer registry. Reports verified manually via Discord.</p>
 
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search by username or Roblox ID..." autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Search by Roblox ID, username, Discord, Facebook, bank account..." autocomplete="off">
       <button onclick="searchUser()">Search</button>
     </div>
 
@@ -119,7 +119,7 @@
     setInterval(updateRandomRows, 2000);
 
     // ===================== ANIMATED TITLE =====================
-    const phrases = ["Just Safe Trade", "JST"];
+    const phrases = ["JST", "Just Safe Trade"];
     let phraseIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
@@ -187,11 +187,24 @@
       let entry = null;
       
       if (isId) {
+        // Buscar por ID exacto
         entry = database.find(item => String(item.robloxUserId) === query);
       } else {
-        entry = database.find(item => 
-          item.knownUsernames.some(name => name.toLowerCase() === query)
-        );
+        // Buscar en múltiples campos: usernames, Facebook, Discord, cuentas bancarias
+        entry = database.find(item => {
+          // Buscar en nombres conocidos
+          if (item.knownUsernames.some(name => name.toLowerCase() === query)) {
+            return true;
+          }
+          // Si existe additionalInfo, buscar dentro
+          if (item.additionalInfo) {
+            const info = item.additionalInfo;
+            if (info.facebook && info.facebook.toLowerCase().includes(query)) return true;
+            if (info.discord && info.discord.toLowerCase().includes(query)) return true;
+            if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(query))) return true;
+          }
+          return false;
+        });
       }
 
       if (!entry) {
