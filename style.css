@@ -350,3 +350,55 @@ body {
 .info-value {
   color: #eee;
 }
+
+/* ==================== PRIMARY INFO (cuando no es Roblox) ==================== */
+.primary-info {
+  background: rgba(123, 31, 162, 0.2);
+  border: 1px solid #2e1a47;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.primary-info .info-label {
+  color: #ce93d8;
+  font-weight: bold;
+}
+
+.primary-info .info-value {
+  color: #eee;
+  word-break: break-all;
+}
+
+.primary-info .info-link {
+  color: #ba68c8;
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+.primary-info .info-link:hover {
+  text-decoration: underline;
+}
+
+/* ==================== ROBLOX SECONDARY ==================== */
+.roblox-secondary {
+  margin-top: 1.5rem;
+  border-top: 1px solid #2e1a47;
+  padding-top: 1rem;
+}
+.roblox-secondary h3 {
+  color: #b388ff;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Estilos ya existentes que mantenemos (asegúrate de tenerlos) */
+.report-card .reason {
+  color: #e94560; /* rojo */
+}

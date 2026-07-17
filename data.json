@@ -4,41 +4,18 @@
     "knownUsernames": ["ExampleScammer1", "ExScammerPro"],
     "additionalInfo": {
       "facebook": {
-      "name": "Scammer John",
-      "url": "facebook.com/scammer.profile.123"
+        "name": "Scammer John",
+        "url": "facebook.com/scammer.profile.123"
       },
       "discord": "ScamUser#1234",
-      "bankAccounts": ["ES12345678901234567890", "MX98765432109876543210"]
+      "bankAccounts": ["ES12345678901234567890"]
     },
     "reports": [
       {
         "reason": "Phishing / Account theft",
-        "description": "Sent a fake Roblox link via in-game chat promising free Robux. Stole a minor's account.",
+        "description": "Sent a fake Roblox link...",
         "evidence": "https://imgur.com/a/evidence123",
         "date": "2026-07-10"
-      }
-    ]
-  },
-  {
-    "robloxUserId": 987654321,
-    "knownUsernames": ["ScamMaster99", "MasterScam99", "ScamLord2024"],
-    "additionalInfo": {
-      "facebook": "",
-      "discord": "ScamLord#0001",
-      "bankAccounts": []
-    },
-    "reports": [
-      {
-        "reason": "Trade scam",
-        "description": "Offered limited items and did not deliver after receiving payment.",
-        "evidence": "https://youtube.com/watch?v=exampleID",
-        "date": "2026-07-12"
-      },
-      {
-        "reason": "Impersonation",
-        "description": "Posed as an admin to ask for passwords.",
-        "evidence": "https://discord.com/channels/...",
-        "date": "2026-07-14"
       }
     ]
   }

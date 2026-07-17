@@ -197,7 +197,6 @@
           }
           if (item.additionalInfo) {
             const info = item.additionalInfo;
-            // Facebook (nombre o url)
             if (info.facebook) {
               const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
               const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
@@ -231,38 +230,95 @@
 
       const knownUsernames = entry.knownUsernames.map(name => escapeHtml(name)).join(', ');
       
-      // Destacar el campo coincidente
-      let matchHtml = '';
-      if (matchField === 'robloxUserId') {
-        matchHtml = `<div class="match-highlight">🔍 Match found: Roblox ID <strong>${escapeHtml(String(entry.robloxUserId))}</strong></div>`;
-      } else if (matchField === 'robloxUsername') {
-        const matchedName = entry.knownUsernames.find(name => name.toLowerCase() === query);
-        matchHtml = `<div class="match-highlight">🔍 Match found: Roblox username <strong>${escapeHtml(matchedName)}</strong></div>`;
-      } else if (matchField === 'facebook') {
-        const fb = entry.additionalInfo.facebook;
-        const fbName = typeof fb === 'object' ? fb.name : fb;
-        const fbUrl = typeof fb === 'object' ? fb.url : fb;
-        matchHtml = `<div class="match-highlight">🔍 Match found: Facebook account <strong>${escapeHtml(fbName || fbUrl)}</strong></div>`;
-      } else if (matchField === 'discord') {
-        matchHtml = `<div class="match-highlight">🔍 Match found: Discord <strong>${escapeHtml(entry.additionalInfo.discord)}</strong></div>`;
-      } else if (matchField === 'bankAccount') {
-        const matchedBank = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(query));
-        matchHtml = `<div class="match-highlight">🔍 Match found: Bank account <strong>${escapeHtml(matchedBank)}</strong></div>`;
+      // --- Construir la parte principal según lo que coincidió ---
+      let primaryHtml = '';
+      let robloxSecondaryHtml = '';
+
+      if (matchField === 'robloxUserId' || matchField === 'robloxUsername') {
+        // Roblox es lo principal: mostramos la cabecera con icono y datos de Roblox
+        const matchedName = matchField === 'robloxUsername' ? entry.knownUsernames.find(name => name.toLowerCase() === query) : null;
+        primaryHtml = `
+          <div class="match-highlight">🔍 Match found: Roblox ${matchField === 'robloxUserId' ? 'ID' : 'username'} <strong>${escapeHtml(matchField === 'robloxUserId' ? String(entry.robloxUserId) : matchedName)}</strong></div>
+          <div class="profile-header">
+            <div class="warning-icon">⚠️</div>
+            <div class="profile-info">
+              <h2>User ID: ${escapeHtml(String(entry.robloxUserId))}</h2>
+              <div class="known-usernames">Known as: ${knownUsernames}</div>
+              <div class="warning">⚠️ ${entry.reports.length} verified report(s)</div>
+            </div>
+          </div>
+        `;
+      } else {
+        // Coincidencia no Roblox: la info de Roblox pasa a ser secundaria
+        let matchValue = '';
+        let matchType = '';
+        if (matchField === 'facebook') {
+          const fb = entry.additionalInfo.facebook;
+          const fbName = typeof fb === 'object' ? fb.name : fb;
+          const fbUrl = typeof fb === 'object' ? fb.url : fb;
+          matchValue = fbName || fbUrl;
+          matchType = 'Facebook account';
+          // Construir enlace verify
+          const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
+          primaryHtml = `
+            <div class="match-highlight">🔍 Match found: ${matchType} <strong>${escapeHtml(matchValue)}</strong></div>
+            <div class="primary-info">
+              <span class="info-label">🔵 Facebook:</span>
+              <span class="info-value">${escapeHtml(matchValue)}</span>
+              <a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer" class="info-link">[Verify]</a>
+            </div>
+          `;
+        } else if (matchField === 'discord') {
+          matchValue = entry.additionalInfo.discord;
+          matchType = 'Discord';
+          primaryHtml = `
+            <div class="match-highlight">🔍 Match found: ${matchType} <strong>${escapeHtml(matchValue)}</strong></div>
+            <div class="primary-info">
+              <span class="info-label">💬 Discord:</span>
+              <span class="info-value">${escapeHtml(matchValue)}</span>
+            </div>
+          `;
+        } else if (matchField === 'bankAccount') {
+          matchValue = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(query));
+          matchType = 'Bank account';
+          primaryHtml = `
+            <div class="match-highlight">🔍 Match found: ${matchType} <strong>${escapeHtml(matchValue)}</strong></div>
+            <div class="primary-info">
+              <span class="info-label">🏦 Bank Account:</span>
+              <span class="info-value">${escapeHtml(matchValue)}</span>
+            </div>
+          `;
+        }
+
+        // Sección secundaria: datos de Roblox
+        robloxSecondaryHtml = `
+          <div class="roblox-secondary">
+            <h3>Linked Roblox Account</h3>
+            <div class="profile-header">
+              <div class="warning-icon">⚠️</div>
+              <div class="profile-info">
+                <h2>User ID: ${escapeHtml(String(entry.robloxUserId))}</h2>
+                <div class="known-usernames">Known as: ${knownUsernames}</div>
+                <div class="warning">⚠️ ${entry.reports.length} verified report(s)</div>
+              </div>
+            </div>
+          </div>
+        `;
       }
 
-      // Información adicional (debajo de la cabecera)
+      // Información adicional (solo si no se mostró como primaria)
       let additionalInfoHtml = '';
-      if (entry.additionalInfo) {
+      if (entry.additionalInfo && matchField !== 'facebook' && matchField !== 'discord' && matchField !== 'bankAccount') {
+        // Si la coincidencia fue Roblox, mostramos todas las infos adicionales aquí
         const info = entry.additionalInfo;
         if (info.facebook) {
           const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
           const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
-          const displayName = fbName || fbUrl;
           const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
           additionalInfoHtml += `
             <div class="info-item">
               <span class="info-label">🔵 Facebook:</span>
-              <span class="info-value">${escapeHtml(displayName)}</span>
+              <span class="info-value">${escapeHtml(fbName || fbUrl)}</span>
               <a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer" class="info-link">[Verify]</a>
             </div>`;
         }
@@ -277,16 +333,9 @@
 
       let html = `
         <div class="result">
-          ${matchHtml}
-          <div class="profile-header">
-            <div class="warning-icon">⚠️</div>
-            <div class="profile-info">
-              <h2>User ID: ${escapeHtml(String(entry.robloxUserId))}</h2>
-              <div class="known-usernames">Known as: ${knownUsernames}</div>
-              <div class="warning">⚠️ ${entry.reports.length} verified report(s)</div>
-            </div>
-          </div>
+          ${primaryHtml}
           ${additionalInfoHtml ? `<div class="additional-info">${additionalInfoHtml}</div>` : ''}
+          ${robloxSecondaryHtml}
       `;
 
       entry.reports.forEach(report => {
