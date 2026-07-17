@@ -169,7 +169,7 @@ body {
 }
 
 .result {
-  background: rgba(25, 25, 25, 0.9);
+  background: rgba(25, 25, 25, 0.5);
   backdrop-filter: blur(10px);
   border-radius: 10px;
   padding: 1.5rem;
