@@ -13,7 +13,7 @@
     <h1 class="animated-heading">
       <span id="animatedText"></span><span class="cursor">_</span>
     </h1>
-    <p class="subtitle">Just Safe Trade — Community-maintained scammer registry. Reports verified manually via Discord.</p>
+    <p class="subtitle">Community-maintained scammer registry. Reports are verified manually via Discord.</p>
 
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search by Roblox ID, username, Discord, Facebook, bank account..." autocomplete="off">
@@ -23,8 +23,8 @@
     <div id="resultContainer"></div>
 
     <div class="legal-note">
-      ⚠️ Disclaimer: All information comes from community reports and is manually verified by the admin before publication.
-      Accuracy is not guaranteed. If you believe a report is incorrect, contact us on Discord. No personal data of reporters is stored.
+      ⚠️ Disclaimer: All information comes from community reports and is manually verified by administration before publication.
+      If you believe a report is incorrect, contact us on Discord or Gmail. No personal data of reporters is stored or shared.
     </div>
   </div>
 
@@ -87,9 +87,9 @@
     setInterval(updateRandomRows, 2000);
 
     // ===================== ANIMATED TITLE =====================
-    const phrases = ["JST", "Just Safe Trade"];
+    const phrases = ["JST", "Just Safe Trade", "For Everyone"];
     let phraseIndex = 0, charIndex = 0, isDeleting = false;
-    const typingSpeed = 100, deletingSpeed = 50, pauseBetween = 2000;
+    const typingSpeed = 100, deletingSpeed = 100, pauseBetween = 5000;
     const textElement = document.getElementById('animatedText');
 
     function typeLoop() {
