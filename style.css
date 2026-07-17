@@ -114,7 +114,7 @@ body {
   justify-content: center;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  max-width: 500px;
+  max-width: 100%;          /* Antes era 500px, ahora ocupa todo el ancho del contenedor */
   margin-left: auto;
   margin-right: auto;
   background: rgba(25, 25, 25, 0.85);

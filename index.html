@@ -163,7 +163,6 @@
       .then(data => { database = data; })
       .catch(err => console.error('Error loading data:', err));
 
-    // Activar búsqueda con Enter
     document.getElementById('searchInput').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         searchUser();
@@ -187,16 +186,10 @@
       let entry = null;
       
       if (isId) {
-        // Buscar por ID exacto
         entry = database.find(item => String(item.robloxUserId) === query);
       } else {
-        // Buscar en múltiples campos: usernames, Facebook, Discord, cuentas bancarias
         entry = database.find(item => {
-          // Buscar en nombres conocidos
-          if (item.knownUsernames.some(name => name.toLowerCase() === query)) {
-            return true;
-          }
-          // Si existe additionalInfo, buscar dentro
+          if (item.knownUsernames.some(name => name.toLowerCase() === query)) return true;
           if (item.additionalInfo) {
             const info = item.additionalInfo;
             if (info.facebook && info.facebook.toLowerCase().includes(query)) return true;
@@ -215,12 +208,14 @@
 
       const knownUsernames = entry.knownUsernames.map(name => escapeHtml(name)).join(', ');
       
-      // Construir información adicional (Facebook, Discord, cuentas bancarias)
+      // Construir información adicional con Facebook clickable
       let additionalInfoHtml = '';
       if (entry.additionalInfo) {
         const info = entry.additionalInfo;
         if (info.facebook) {
-          additionalInfoHtml += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> ${escapeHtml(info.facebook)}</div>`;
+          // Convertir el texto de Facebook en un enlace
+          const fbUrl = info.facebook.startsWith('http') ? info.facebook : `https://${info.facebook}`;
+          additionalInfoHtml += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> <a href="${escapeHtml(fbUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(info.facebook)}</a></div>`;
         }
         if (info.discord) {
           additionalInfoHtml += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
