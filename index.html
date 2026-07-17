@@ -163,6 +163,13 @@
       .then(data => { database = data; })
       .catch(err => console.error('Error loading data:', err));
 
+    // Activar búsqueda con Enter
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        searchUser();
+      }
+    });
+
     async function searchUser() {
       const input = document.getElementById('searchInput').value.trim();
       const container = document.getElementById('resultContainer');
@@ -174,17 +181,14 @@
         return;
       }
 
-      // Determinar si es un ID numérico
       const isId = /^\d+$/.test(input);
       const query = input.toLowerCase();
       
       let entry = null;
       
       if (isId) {
-        // Buscar por ID exacto
         entry = database.find(item => String(item.robloxUserId) === query);
       } else {
-        // Buscar por nombre (en la lista de knownUsernames, no case-sensitive)
         entry = database.find(item => 
           item.knownUsernames.some(name => name.toLowerCase() === query)
         );
@@ -196,9 +200,24 @@
         return;
       }
 
-      // Construir la vista de resultados
       const knownUsernames = entry.knownUsernames.map(name => escapeHtml(name)).join(', ');
       
+      // Construir información adicional (Facebook, Discord, cuentas bancarias)
+      let additionalInfoHtml = '';
+      if (entry.additionalInfo) {
+        const info = entry.additionalInfo;
+        if (info.facebook) {
+          additionalInfoHtml += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> ${escapeHtml(info.facebook)}</div>`;
+        }
+        if (info.discord) {
+          additionalInfoHtml += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
+        }
+        if (info.bankAccounts && info.bankAccounts.length > 0) {
+          const banks = info.bankAccounts.map(b => escapeHtml(b)).join(', ');
+          additionalInfoHtml += `<div class="info-item"><span class="info-label">🏦 Bank Accounts:</span> ${banks}</div>`;
+        }
+      }
+
       let html = `
         <div class="result">
           <div class="profile-header">
@@ -209,6 +228,7 @@
               <div class="warning">⚠️ ${entry.reports.length} verified report(s)</div>
             </div>
           </div>
+          ${additionalInfoHtml ? `<div class="additional-info">${additionalInfoHtml}</div>` : ''}
       `;
 
       entry.reports.forEach(report => {

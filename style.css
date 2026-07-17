@@ -207,6 +207,8 @@ body {
   line-height: 1;
   text-shadow: 0 0 10px #7b1fa2;
   color: #b388ff;
+  user-select: none;        /* No seleccionable */
+  pointer-events: none;     /* No interactivo */
 }
 
 .profile-info {
@@ -234,6 +236,27 @@ body {
   color: #fff;
   font-weight: bold;
   box-shadow: 0 0 10px rgba(123, 31, 162, 0.4);
+}
+
+/* ==================== ADDITIONAL INFO (Facebook, Discord, Banks) ==================== */
+.additional-info {
+  background: rgba(30, 30, 45, 0.6);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #2e1a47;
+}
+
+.info-item {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.info-label {
+  font-weight: bold;
+  color: #ce93d8;
+  margin-right: 0.5rem;
 }
 
 .report-card {

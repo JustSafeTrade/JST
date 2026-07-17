@@ -2,6 +2,11 @@
   {
     "robloxUserId": 123456789,
     "knownUsernames": ["ExampleScammer1", "ExScammerPro"],
+    "additionalInfo": {
+      "facebook": "facebook.com/scammer.profile.123",
+      "discord": "ScamUser#1234",
+      "bankAccounts": ["ES12345678901234567890", "MX98765432109876543210"]
+    },
     "reports": [
       {
         "reason": "Phishing / Account theft",
@@ -14,6 +19,11 @@
   {
     "robloxUserId": 987654321,
     "knownUsernames": ["ScamMaster99", "MasterScam99", "ScamLord2024"],
+    "additionalInfo": {
+      "facebook": "",
+      "discord": "ScamLord#0001",
+      "bankAccounts": []
+    },
     "reports": [
       {
         "reason": "Trade scam",
