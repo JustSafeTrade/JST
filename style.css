@@ -296,3 +296,13 @@ body {
   padding-top: 1rem;
   text-align: center;
 }
+
+/* ==================== REPORTS HEADING ==================== */
+.reports-heading {
+  color: #b388ff;
+  font-size: 1.2rem;
+  margin: 1.5rem 0 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid #2e1a47;
+  padding-bottom: 0.3rem;
+}

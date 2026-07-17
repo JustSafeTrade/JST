@@ -29,7 +29,7 @@
   </div>
 
   <script>
-    // ===================== BACKGROUND ANIMATION (sin cambios) =====================
+    // ===================== BACKGROUND ANIMATION =====================
     const bgContainer = document.getElementById('bgDatabase');
     const prefixes = ['xX', 'Pro', 'Noob', 'Dark', 'Epic', 'Master', 'Shadow', 'Blaze', 'Frost', 'Cyber', 'Ninja', 'Pixel', 'King', 'Queen', 'Lord', 'Mega', 'Ultra', 'Hyper', 'Zero', 'Max'];
     const suffixes = ['_Gamer', '_YT', '_Roblox', '123', '456', '789', '2000', '2024', 'Playz', 'Fan', 'Boy', 'Girl', 'Man', 'Pro', 'X', 'Z', 'Slayer', 'Hunter', 'Wizard', 'Dragon'];
@@ -171,10 +171,10 @@
         matchHtml = `<div class="match-highlight">🔍 Match found: Bank account <strong>${escapeHtml(matchedBank)}</strong></div>`;
       }
 
-      // --- Unified information block (todos los datos disponibles) ---
+      // --- Unified information block (sin el contador de reportes) ---
       let infoItems = '';
       const knownUsernames = entry.knownUsernames.join(', ');
-      infoItems += `<div class="info-item"><span class="info-label">🎮 Roblox:</span> ID ${escapeHtml(String(entry.robloxUserId))} (known as: ${escapeHtml(knownUsernames)}) <span class="report-count">⚠️ ${entry.reports.length} report(s)</span></div>`;
+      infoItems += `<div class="info-item"><span class="info-label">🎮 Roblox:</span> ID ${escapeHtml(String(entry.robloxUserId))} (known as: ${escapeHtml(knownUsernames)})</div>`;
 
       if (entry.additionalInfo) {
         const info = entry.additionalInfo;
@@ -182,7 +182,8 @@
           const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
           const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
           const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
-          infoItems += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> ${escapeHtml(fbName || fbUrl)} <a href="${escapeHtml(fbLink)}" target="_blank" class="info-link">[Verify]</a></div>`;
+          // Mostrar la URL como enlace, sin "[Verify]"
+          infoItems += `<div class="info-item"><span class="info-label">🔵 Facebook:</span> <a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>${fbName ? ' (' + escapeHtml(fbName) + ')' : ''}</div>`;
         }
         if (info.discord) {
           infoItems += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
@@ -193,8 +194,8 @@
         }
       }
 
-      // --- Reportes ---
-      let reportsHtml = '';
+      // --- Reportes con título "Reports:" ---
+      let reportsHtml = '<h3 class="reports-heading">Reports:</h3>';
       entry.reports.forEach(report => {
         reportsHtml += `
           <div class="report-card">
