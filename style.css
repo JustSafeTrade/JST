@@ -68,7 +68,7 @@ body {
   z-index: 1;
   width: 100%;
   max-width: 800px;
-  padding: 2rem 1.5rem;
+  padding: 10vh 1.5rem 2rem;   /* Espacio superior grande para centrar el título */
   margin: 0 auto;
 }
 
@@ -173,7 +173,7 @@ body {
   margin-top: 1rem;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
   border: 1px solid #2e1a47;
-  margin-bottom: 2rem; /* espacio antes de la lista */
+  margin-bottom: 2rem;
 }
 
 .no-results {
@@ -257,7 +257,7 @@ body {
 
 .report-card .reason {
   font-weight: bold;
-  color: #e94560;   /* Rojo para los motivos */
+  color: #e94560;
 }
 
 .report-card .date {
@@ -371,4 +371,15 @@ body {
 }
 .view-details-btn:hover {
   background: #9c27b0;
+}
+
+/* ==================== SCAMMER DETAILS (EXPANSION) ==================== */
+.scammer-details {
+  margin-top: 1rem;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.expanded-info {
+  border-top: 1px solid #2e1a47;
+  padding-top: 1rem;
 }

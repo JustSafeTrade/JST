@@ -111,41 +111,113 @@
     }
     setTimeout(typeLoop, 500);
 
-    // ===================== SEARCH FUNCTIONALITY =====================
+    // ===================== DATABASE & COMMON FUNCTIONS =====================
     let database = [];
     fetch('data.json')
       .then(r => r.json())
       .then(d => {
         database = d;
-        renderScammerList();  // Generar la lista pública una vez cargados los datos
+        renderScammerList();
       })
       .catch(e => console.error(e));
 
+    function escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Construye el bloque de coincidencia (match highlight)
+    function buildMatchHighlight(entry, matchField, lowerQuery) {
+      if (matchField === 'robloxUserId') return `<div class="match-highlight">🔍 Match found: Roblox ID <strong>${escapeHtml(String(entry.robloxUserId))}</strong></div>`;
+      if (matchField === 'robloxUsername') {
+        const matched = entry.knownUsernames.find(n => n.toLowerCase() === lowerQuery);
+        return `<div class="match-highlight">🔍 Match found: Roblox username <strong>${escapeHtml(matched)}</strong></div>`;
+      }
+      if (matchField === 'facebook') {
+        const fb = entry.additionalInfo.facebook;
+        const fbName = typeof fb === 'object' ? fb.name : fb;
+        const fbUrl = typeof fb === 'object' ? fb.url : fb;
+        return `<div class="match-highlight">🔍 Match found: Facebook account <strong>${escapeHtml(fbName || fbUrl)}</strong></div>`;
+      }
+      if (matchField === 'discord') {
+        return `<div class="match-highlight">🔍 Match found: Discord <strong>${escapeHtml(entry.additionalInfo.discord)}</strong></div>`;
+      }
+      if (matchField === 'bankAccount') {
+        const matchedBank = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(lowerQuery));
+        return `<div class="match-highlight">🔍 Match found: Payment method <strong>${escapeHtml(matchedBank)}</strong></div>`;
+      }
+      return '';
+    }
+
+    // Construye el bloque unificado de información (Roblox, Facebook, Discord, Payment Methods)
+    function buildInfoBlock(entry) {
+      const knownUsernames = entry.knownUsernames.join(', ');
+      const robloxProfileUrl = `https://www.roblox.com/users/${entry.robloxUserId}/profile`;
+      let html = `
+        <div class="info-item">
+          <span class="info-label">🎮 Roblox:</span>
+          <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer">ID ${escapeHtml(String(entry.robloxUserId))}</a>
+          (known as: ${escapeHtml(knownUsernames)})
+        </div>`;
+
+      if (entry.additionalInfo) {
+        const info = entry.additionalInfo;
+        if (info.facebook) {
+          const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
+          const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
+          const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
+          const namePart = fbName ? escapeHtml(fbName) : '';
+          const linkPart = `<a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>`;
+          html += `
+            <div class="info-item">
+              <span class="info-label">🔵 Facebook:</span>
+              ${namePart} ${namePart ? '(' : ''}${linkPart}${namePart ? ')' : ''}
+            </div>`;
+        }
+        if (info.discord) {
+          html += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
+        }
+        if (info.bankAccounts && info.bankAccounts.length > 0) {
+          const methods = info.bankAccounts.map(b => escapeHtml(b)).join(', ');
+          html += `<div class="info-item"><span class="info-label">💳 Payment Methods:</span> ${methods}</div>`;
+        }
+      }
+      return html;
+    }
+
+    // Construye una tarjeta de reporte individual
+    function buildReportCard(report) {
+      return `
+        <div class="report-card">
+          <div class="reason">📌 ${escapeHtml(report.reason)}</div>
+          <p>${escapeHtml(report.description)}</p>
+          ${report.evidence ? `<p class="evidence">🔗 Evidence: <a href="${escapeHtml(report.evidence)}" target="_blank">View proof</a></p>` : ''}
+          <div class="date">Reported on ${report.date || 'Unknown date'}</div>
+        </div>`;
+    }
+
+    // ===================== SEARCH FUNCTIONALITY =====================
     document.getElementById('searchInput').addEventListener('keydown', e => {
       if (e.key === 'Enter') searchUser();
     });
 
-    // Función de búsqueda mejorada (acepta parámetro opcional para búsquedas directas)
     async function searchUser(forceQuery = null) {
       const inputField = document.getElementById('searchInput');
       const container = document.getElementById('resultContainer');
-      const mainContainer = document.querySelector('.container');
       
       let query;
       if (forceQuery !== null) {
         query = String(forceQuery);
-        inputField.value = query;  // Reflejar en el campo de búsqueda
+        inputField.value = query;
       } else {
         query = inputField.value.trim();
         if (!query) {
-          mainContainer.classList.remove('results-visible');
           container.innerHTML = '';
           return;
         }
       }
 
       container.innerHTML = '';
-
       const isId = /^\d+$/.test(query);
       const lowerQuery = query.toLowerCase();
       let entry = null, matchField = null;
@@ -181,72 +253,12 @@
 
       if (!entry) {
         container.innerHTML = '<div class="no-results">✅ No reports found for that user. Make sure to type correctly. If you have information, report it on Discord.</div>';
-        mainContainer.classList.add('results-visible');
         return;
       }
 
-      // --- Match highlight ---
-      let matchHtml = '';
-      if (matchField === 'robloxUserId') matchHtml = `<div class="match-highlight">🔍 Match found: Roblox ID <strong>${escapeHtml(String(entry.robloxUserId))}</strong></div>`;
-      else if (matchField === 'robloxUsername') {
-        const matched = entry.knownUsernames.find(n => n.toLowerCase() === lowerQuery);
-        matchHtml = `<div class="match-highlight">🔍 Match found: Roblox username <strong>${escapeHtml(matched)}</strong></div>`;
-      } else if (matchField === 'facebook') {
-        const fb = entry.additionalInfo.facebook;
-        const fbName = typeof fb === 'object' ? fb.name : fb;
-        const fbUrl = typeof fb === 'object' ? fb.url : fb;
-        matchHtml = `<div class="match-highlight">🔍 Match found: Facebook account <strong>${escapeHtml(fbName || fbUrl)}</strong></div>`;
-      } else if (matchField === 'discord') {
-        matchHtml = `<div class="match-highlight">🔍 Match found: Discord <strong>${escapeHtml(entry.additionalInfo.discord)}</strong></div>`;
-      } else if (matchField === 'bankAccount') {
-        const matchedBank = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(lowerQuery));
-        matchHtml = `<div class="match-highlight">🔍 Match found: Payment method <strong>${escapeHtml(matchedBank)}</strong></div>`;
-      }
-
-      // --- Unified information block ---
-      const knownUsernames = entry.knownUsernames.join(', ');
-      const robloxProfileUrl = `https://www.roblox.com/users/${entry.robloxUserId}/profile`;
-      let infoItems = `
-        <div class="info-item">
-          <span class="info-label">🎮 Roblox:</span>
-          <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer">ID ${escapeHtml(String(entry.robloxUserId))}</a>
-          (known as: ${escapeHtml(knownUsernames)})
-        </div>`;
-
-      if (entry.additionalInfo) {
-        const info = entry.additionalInfo;
-        if (info.facebook) {
-          const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
-          const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
-          const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
-          const namePart = fbName ? escapeHtml(fbName) : '';
-          const linkPart = `<a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>`;
-          infoItems += `
-            <div class="info-item">
-              <span class="info-label">🔵 Facebook:</span>
-              ${namePart} ${namePart ? '(' : ''}${linkPart}${namePart ? ')' : ''}
-            </div>`;
-        }
-        if (info.discord) {
-          infoItems += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
-        }
-        if (info.bankAccounts && info.bankAccounts.length > 0) {
-          const methods = info.bankAccounts.map(b => escapeHtml(b)).join(', ');
-          infoItems += `<div class="info-item"><span class="info-label">💳 Payment Methods:</span> ${methods}</div>`;
-        }
-      }
-
-      // --- Reportes ---
-      let reportsHtml = '<h3 class="reports-heading">Reports:</h3>';
-      entry.reports.forEach(report => {
-        reportsHtml += `
-          <div class="report-card">
-            <div class="reason">📌 ${escapeHtml(report.reason)}</div>
-            <p>${escapeHtml(report.description)}</p>
-            ${report.evidence ? `<p class="evidence">🔗 Evidence: <a href="${escapeHtml(report.evidence)}" target="_blank">View proof</a></p>` : ''}
-            <div class="date">Reported on ${report.date || 'Unknown date'}</div>
-          </div>`;
-      });
+      const matchHtml = buildMatchHighlight(entry, matchField, lowerQuery);
+      const infoItems = buildInfoBlock(entry);
+      const reportsHtml = '<h3 class="reports-heading">Reports:</h3>' + entry.reports.map(buildReportCard).join('');
 
       container.innerHTML = `
         <div class="result">
@@ -254,7 +266,6 @@
           <div class="info-block">${infoItems}</div>
           ${reportsHtml}
         </div>`;
-      mainContainer.classList.add('results-visible');
     }
 
     // ===================== LISTA PÚBLICA DE SCAMMERS =====================
@@ -265,31 +276,62 @@
         return;
       }
 
+      // Aleatorizar el orden
+      const shuffled = [...database].sort(() => Math.random() - 0.5);
+
       let html = '<h2 class="section-title">📋 Registered Scammers</h2><div class="scammer-grid">';
-      database.forEach(entry => {
+      shuffled.forEach(entry => {
         const knownUsernames = entry.knownUsernames.join(', ');
         const latestReport = entry.reports.length ? entry.reports[entry.reports.length - 1] : null;
         const reportCount = entry.reports.length;
         const robloxProfileUrl = `https://www.roblox.com/users/${entry.robloxUserId}/profile`;
 
         html += `
-          <div class="scammer-card">
+          <div class="scammer-card" data-entryid="${escapeHtml(String(entry.robloxUserId))}">
             <div class="scammer-card-header">
               <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer" class="roblox-id-link">🎮 Roblox ID: ${escapeHtml(String(entry.robloxUserId))}</a>
             </div>
             <div class="scammer-known-as">Known as: ${escapeHtml(knownUsernames)}</div>
             <div class="scammer-reports">Reports: <strong>${reportCount}</strong></div>
             ${latestReport ? `<div class="scammer-latest-reason">Latest: ${escapeHtml(latestReport.reason)}</div>` : ''}
-            <button class="view-details-btn" onclick="searchUser('${escapeHtml(String(entry.robloxUserId))}')">🔍 View Details</button>
+            <button class="view-details-btn" data-action="toggle-details">🔍 View Details</button>
+            <div class="scammer-details" style="display: none;"></div>
           </div>`;
       });
       html += '</div>';
       listContainer.innerHTML = html;
-    }
 
-    function escapeHtml(text) {
-      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-      return String(text).replace(/[&<>"']/g, m => map[m]);
+      // Delegación de eventos para los botones "View Details"
+      listContainer.addEventListener('click', e => {
+        const button = e.target.closest('.view-details-btn');
+        if (!button) return;
+
+        const card = button.closest('.scammer-card');
+        const detailsDiv = card.querySelector('.scammer-details');
+        const entryId = card.dataset.entryid;
+        const entry = database.find(item => String(item.robloxUserId) === entryId);
+        if (!entry) return;
+
+        // Si ya está expandido, lo cerramos
+        if (detailsDiv.style.display !== 'none') {
+          detailsDiv.style.display = 'none';
+          button.innerHTML = '🔍 View Details';
+          return;
+        }
+
+        // Construir contenido de la expansión
+        const infoBlock = buildInfoBlock(entry);
+        const reportsHtml = '<h3 class="reports-heading">Reports:</h3>' + entry.reports.map(buildReportCard).join('');
+        detailsDiv.innerHTML = `
+          <div class="expanded-info">
+            <div class="info-block">${infoBlock}</div>
+            ${reportsHtml}
+          </div>`;
+        
+        // Mostrar con animación (usaremos una clase CSS para transición)
+        detailsDiv.style.display = 'block';
+        button.innerHTML = '🔽 Hide Details';
+      });
     }
   </script>
 </body>
