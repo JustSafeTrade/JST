@@ -279,7 +279,7 @@
       // Aleatorizar el orden
       const shuffled = [...database].sort(() => Math.random() - 0.5);
 
-      let html = '<h2 class="section-title">📋 Registered Scammers</h2><div class="scammer-grid">';
+      let html = '<h2 class="section-title">Registered Scammers</h2><div class="scammer-grid">';
       shuffled.forEach(entry => {
         const knownUsernames = entry.knownUsernames.join(', ');
         const latestReport = entry.reports.length ? entry.reports[entry.reports.length - 1] : null;
@@ -289,7 +289,7 @@
         html += `
           <div class="scammer-card" data-entryid="${escapeHtml(String(entry.robloxUserId))}">
             <div class="scammer-card-header">
-              <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer" class="roblox-id-link">🎮 Roblox ID: ${escapeHtml(String(entry.robloxUserId))}</a>
+              <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer" class="roblox-id-link">Roblox ID: ${escapeHtml(String(entry.robloxUserId))}</a>
             </div>
             <div class="scammer-known-as">Known as: ${escapeHtml(knownUsernames)}</div>
             <div class="scammer-reports">Reports: <strong>${reportCount}</strong></div>
@@ -315,7 +315,7 @@
         // Si ya está expandido, lo cerramos
         if (detailsDiv.style.display !== 'none') {
           detailsDiv.style.display = 'none';
-          button.innerHTML = '🔍 View Details';
+          button.innerHTML = '🔽 View Details';
           return;
         }
 
@@ -330,7 +330,7 @@
         
         // Mostrar con animación (usaremos una clase CSS para transición)
         detailsDiv.style.display = 'block';
-        button.innerHTML = '🔽 Hide Details';
+        button.innerHTML = '🔼 Hide Details';
       });
     }
   </script>
