@@ -15,12 +15,16 @@
     </h1>
     <p class="subtitle">Community-maintained scammer registry. Reports are verified manually via Discord.</p>
 
-    <div class="search-box">
+    <!-- Barra de búsqueda fija al hacer scroll -->
+    <div class="search-box" id="searchBox">
       <input type="text" id="searchInput" placeholder="Search by Roblox ID, username, Discord, Facebook, Bank, Payment Method..." autocomplete="off">
       <button onclick="searchUser()">Search</button>
     </div>
 
     <div id="resultContainer"></div>
+
+    <!-- Lista pública de todos los scammers -->
+    <div id="scammerList"></div>
 
     <div class="legal-note">
       ⚠️ Disclaimer: All information comes from community reports and is manually verified by administration before publication.
@@ -109,46 +113,66 @@
 
     // ===================== SEARCH FUNCTIONALITY =====================
     let database = [];
-    fetch('data.json').then(r => r.json()).then(d => database = d).catch(e => console.error(e));
+    fetch('data.json')
+      .then(r => r.json())
+      .then(d => {
+        database = d;
+        renderScammerList();  // Generar la lista pública una vez cargados los datos
+      })
+      .catch(e => console.error(e));
 
     document.getElementById('searchInput').addEventListener('keydown', e => {
       if (e.key === 'Enter') searchUser();
     });
 
-    async function searchUser() {
-      const input = document.getElementById('searchInput').value.trim();
+    // Función de búsqueda mejorada (acepta parámetro opcional para búsquedas directas)
+    async function searchUser(forceQuery = null) {
+      const inputField = document.getElementById('searchInput');
       const container = document.getElementById('resultContainer');
       const mainContainer = document.querySelector('.container');
-      container.innerHTML = '';
-      if (!input) { mainContainer.classList.remove('results-visible'); return; }
+      
+      let query;
+      if (forceQuery !== null) {
+        query = forceQuery;
+        inputField.value = query;  // Reflejar en el campo de búsqueda
+      } else {
+        query = inputField.value.trim();
+        if (!query) {
+          mainContainer.classList.remove('results-visible');
+          container.innerHTML = '';
+          return;
+        }
+      }
 
-      const isId = /^\d+$/.test(input);
-      const query = input.toLowerCase();
+      container.innerHTML = '';
+
+      const isId = /^\d+$/.test(query);
+      const lowerQuery = query.toLowerCase();
       let entry = null, matchField = null;
 
       if (isId) {
-        entry = database.find(item => String(item.robloxUserId) === query);
+        entry = database.find(item => String(item.robloxUserId) === lowerQuery);
         if (entry) matchField = 'robloxUserId';
       } else {
         entry = database.find(item => {
-          if (item.knownUsernames.some(name => name.toLowerCase() === query)) {
+          if (item.knownUsernames.some(name => name.toLowerCase() === lowerQuery)) {
             matchField = 'robloxUsername';
             return true;
           }
           return false;
         });
-        if (!entry && query.length >= 3) {
+        if (!entry && lowerQuery.length >= 3) {
           entry = database.find(item => {
             if (item.additionalInfo) {
               const info = item.additionalInfo;
               if (info.facebook) {
                 const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
                 const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
-                if (fbName && fbName.toLowerCase().includes(query)) { matchField = 'facebook'; return true; }
-                if (fbUrl && fbUrl.toLowerCase().includes(query)) { matchField = 'facebook'; return true; }
+                if (fbName && fbName.toLowerCase().includes(lowerQuery)) { matchField = 'facebook'; return true; }
+                if (fbUrl && fbUrl.toLowerCase().includes(lowerQuery)) { matchField = 'facebook'; return true; }
               }
-              if (info.discord && info.discord.toLowerCase().includes(query)) { matchField = 'discord'; return true; }
-              if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(query))) { matchField = 'bankAccount'; return true; }
+              if (info.discord && info.discord.toLowerCase().includes(lowerQuery)) { matchField = 'discord'; return true; }
+              if (info.bankAccounts && info.bankAccounts.some(acc => acc.toLowerCase().includes(lowerQuery))) { matchField = 'bankAccount'; return true; }
             }
             return false;
           });
@@ -156,7 +180,7 @@
       }
 
       if (!entry) {
-        container.innerHTML = '<div class="no-results">✅ No reports found for that user. Make sure to type correctly, if you have information, report it on Discord.</div>';
+        container.innerHTML = '<div class="no-results">✅ No reports found for that user. Make sure to type correctly. If you have information, report it on Discord.</div>';
         mainContainer.classList.add('results-visible');
         return;
       }
@@ -165,7 +189,7 @@
       let matchHtml = '';
       if (matchField === 'robloxUserId') matchHtml = `<div class="match-highlight">🔍 Match found: Roblox ID <strong>${escapeHtml(String(entry.robloxUserId))}</strong></div>`;
       else if (matchField === 'robloxUsername') {
-        const matched = entry.knownUsernames.find(n => n.toLowerCase() === query);
+        const matched = entry.knownUsernames.find(n => n.toLowerCase() === lowerQuery);
         matchHtml = `<div class="match-highlight">🔍 Match found: Roblox username <strong>${escapeHtml(matched)}</strong></div>`;
       } else if (matchField === 'facebook') {
         const fb = entry.additionalInfo.facebook;
@@ -175,7 +199,7 @@
       } else if (matchField === 'discord') {
         matchHtml = `<div class="match-highlight">🔍 Match found: Discord <strong>${escapeHtml(entry.additionalInfo.discord)}</strong></div>`;
       } else if (matchField === 'bankAccount') {
-        const matchedBank = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(query));
+        const matchedBank = entry.additionalInfo.bankAccounts.find(acc => acc.toLowerCase().includes(lowerQuery));
         matchHtml = `<div class="match-highlight">🔍 Match found: Payment method <strong>${escapeHtml(matchedBank)}</strong></div>`;
       }
 
@@ -195,7 +219,6 @@
           const fbName = typeof info.facebook === 'object' ? info.facebook.name : info.facebook;
           const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
           const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
-          // Mostrar nombre primero, luego el link
           const namePart = fbName ? escapeHtml(fbName) : '';
           const linkPart = `<a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>`;
           infoItems += `
@@ -232,6 +255,36 @@
           ${reportsHtml}
         </div>`;
       mainContainer.classList.add('results-visible');
+    }
+
+    // ===================== LISTA PÚBLICA DE SCAMMERS =====================
+    function renderScammerList() {
+      const listContainer = document.getElementById('scammerList');
+      if (!database.length) {
+        listContainer.innerHTML = '<p class="no-results">No scammers registered yet.</p>';
+        return;
+      }
+
+      let html = '<h2 class="section-title">📋 Registered Scammers</h2><div class="scammer-grid">';
+      database.forEach((entry, index) => {
+        const knownUsernames = entry.knownUsernames.join(', ');
+        const latestReport = entry.reports.length ? entry.reports[entry.reports.length - 1] : null;
+        const reportCount = entry.reports.length;
+        const robloxProfileUrl = `https://www.roblox.com/users/${entry.robloxUserId}/profile`;
+
+        html += `
+          <div class="scammer-card">
+            <div class="scammer-card-header">
+              <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer" class="roblox-id-link">🎮 Roblox ID: ${escapeHtml(String(entry.robloxUserId))}</a>
+            </div>
+            <div class="scammer-known-as">Known as: ${escapeHtml(knownUsernames)}</div>
+            <div class="scammer-reports">Reports: <strong>${reportCount}</strong></div>
+            ${latestReport ? `<div class="scammer-latest-reason">Latest: ${escapeHtml(latestReport.reason)}</div>` : ''}
+            <button class="view-details-btn" onclick="searchUser('${escapeHtml(String(entry.robloxUserId))}')">🔍 View Details</button>
+          </div>`;
+      });
+      html += '</div>';
+      listContainer.innerHTML = html;
     }
 
     function escapeHtml(text) {

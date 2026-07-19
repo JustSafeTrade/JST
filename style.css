@@ -108,8 +108,18 @@ body {
   font-size: 0.95rem;
 }
 
-/* ==================== SEARCH BOX ==================== */
+/* ==================== SEARCH BOX STICKY ==================== */
 .search-box {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 15, 20, 0.95); /* Fondo oscuro para que destaque */
+  backdrop-filter: blur(10px);
+  padding: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  border: 1px solid #2e1a47;
+  /* Resto de propiedades que ya tenías */
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -117,45 +127,88 @@ body {
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
-  background: rgba(25, 25, 25, 0.85);
-  padding: 0.5rem;
-  border-radius: 10px;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+/* Efecto adicional cuando el sticky está activo (opcional) */
+.search-box.sticky-active {
+  box-shadow: 0 4px 12px rgba(123, 31, 162, 0.6);
+}
+
+/* ==================== SCAMMER LIST SECTION ==================== */
+.section-title {
+  color: #b388ff;
+  font-size: 1.8rem;
+  margin: 3rem 0 1.5rem;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+}
+
+.scammer-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.scammer-card {
+  background: rgba(25, 25, 35, 0.85);
   border: 1px solid #2e1a47;
-}
-
-.search-box input {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  border: none;
   border-radius: 8px;
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  font-size: 1rem;
-  outline: none;
-  transition: background 0.3s;
+  padding: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  backdrop-filter: blur(5px);
 }
 
-.search-box input:focus {
-  background: rgba(255,255,255,0.12);
+.scammer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
 }
 
-.search-box button {
-  padding: 0.75rem 1.5rem;
+.scammer-card-header {
+  margin-bottom: 0.3rem;
+}
+
+.roblox-id-link {
+  color: #ce93d8;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.roblox-id-link:hover {
+  text-decoration: underline;
+}
+
+.scammer-known-as {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.scammer-reports {
+  font-size: 0.9rem;
+  color: #ddd;
+  margin-bottom: 0.2rem;
+}
+
+.scammer-latest-reason {
+  font-size: 0.85rem;
+  color: #e94560;  /* Rojo para el último motivo */
+  font-weight: bold;
+  margin-bottom: 0.6rem;
+}
+
+.view-details-btn {
   background: #7b1fa2;
   border: none;
-  border-radius: 8px;
   color: #fff;
-  font-weight: bold;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s, box-shadow 0.3s;
-  box-shadow: 0 0 10px rgba(123, 31, 162, 0.5);
+  font-weight: bold;
+  transition: background 0.3s;
+  font-size: 0.9rem;
 }
-
-.search-box button:hover {
+.view-details-btn:hover {
   background: #9c27b0;
-  box-shadow: 0 0 15px rgba(156, 39, 176, 0.7);
 }
 
 /* ==================== RESULT CARDS ==================== */
