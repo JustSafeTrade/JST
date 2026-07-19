@@ -299,7 +299,7 @@ body {
 .section-title {
   color: #b388ff;
   font-size: 1.8rem;
-  margin: 4rem 0 2rem;        /* Antes 3rem 0 1.5rem, ahora mayor separación superior e inferior */
+  margin: 6rem 0 2rem;        /* Antes 3rem 0 1.5rem, ahora mayor separación superior e inferior */
   text-align: center;
   font-family: 'Courier New', monospace;
 }
