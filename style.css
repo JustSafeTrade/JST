@@ -68,14 +68,14 @@ body {
   z-index: 1;
   width: 100%;
   max-width: 800px;
-  padding: 25vh 1.5rem 2rem;   /* Espacio superior grande para centrar el título */
+  padding: 25vh 1.5rem 2rem;
   margin: 0 auto;
 }
 
 /* ==================== ANIMATED TITLE ==================== */
 .animated-heading {
   text-align: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.2rem;       /* Antes 0.5rem, más espacio entre título y subtítulo */
   color: #b388ff;
   font-size: 2.5rem;
   text-shadow: 0 0 15px rgba(179, 136, 255, 0.7);
@@ -97,7 +97,7 @@ body {
 
 .subtitle {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;      /* Antes 2rem, más espacio debajo del subtítulo */
   color: #999;
   font-size: 0.95rem;
 }
@@ -116,7 +116,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;        /* Antes 2rem, más separación de la siguiente sección */
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -299,7 +299,7 @@ body {
 .section-title {
   color: #b388ff;
   font-size: 1.8rem;
-  margin: 3rem 0 1.5rem;
+  margin: 4rem 0 2rem;        /* Antes 3rem 0 1.5rem, ahora mayor separación superior e inferior */
   text-align: center;
   font-family: 'Courier New', monospace;
 }
@@ -307,7 +307,7 @@ body {
 .scammer-grid {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1.4rem;               /* Antes 0.8rem, mucho más espacio entre tarjetas */
   margin-bottom: 2rem;
 }
 
