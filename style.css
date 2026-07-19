@@ -68,7 +68,7 @@ body {
   z-index: 1;
   width: 100%;
   max-width: 800px;
-  padding: 10vh 1.5rem 2rem;   /* Espacio superior grande para centrar el título */
+  padding: 25vh 1.5rem 2rem;   /* Espacio superior grande para centrar el título */
   margin: 0 auto;
 }
 
