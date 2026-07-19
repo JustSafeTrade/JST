@@ -12,10 +12,102 @@
     },
     "reports": [
       {
-        "reason": "Account theft & Revocery though support",
-        "description": "Scammed someone by 'selling' an account then recovering it via roblox support, we bealive this account was original stolen and being used for scamming.",
-        "evidence": "https://cdn.discordapp.com/attachments/1314674040547315844/1527520893482303701/resized.force.1aa9aaeb.png?ex=6a5af630&is=6a59a4b0&hm=878d317b1eee300fb907d903a6bb8b25d1299749bc82b6bbd10f886aeb0450a3",
+        "reason": "Account theft & Recovery through support",
+        "description": "Scammed someone by 'selling' an account then recovering it via Roblox support. We believe this account was originally stolen and used for scamming.",
+        "evidence": "https://cdn.discordapp.com/attachments/1314674040547315844/1527520893482303701/resized.force.1aa9aaeb.png",
         "date": "2026-07-14"
+      }
+    ]
+  },
+  {
+    "robloxUserId": 123456789,
+    "knownUsernames": ["ScamMaster99", "MasterScam99", "ScamLord2024"],
+    "additionalInfo": {
+      "facebook": {
+        "name": "John Scammer",
+        "url": "facebook.com/john.scammer.735"
+      },
+      "discord": "ScamLord#0001",
+      "bankAccounts": ["ES12345678901234567890", "MX98765432109876543210"]
+    },
+    "reports": [
+      {
+        "reason": "Trade scam",
+        "description": "Offered limited items and did not deliver after receiving payment.",
+        "evidence": "https://youtube.com/watch?v=exampleID",
+        "date": "2026-07-12"
+      },
+      {
+        "reason": "Impersonation",
+        "description": "Posed as an admin to ask for passwords.",
+        "evidence": "https://discord.com/channels/...",
+        "date": "2026-07-14"
+      }
+    ]
+  },
+  {
+    "robloxUserId": 987654321,
+    "knownUsernames": ["FastBucksTrader", "QuickCashPlays"],
+    "additionalInfo": {
+      "facebook": {
+        "name": "Maria Trader",
+        "url": "facebook.com/maria.trader.2024"
+      },
+      "discord": "MariaTrader#4567",
+      "bankAccounts": ["PayPal: maria.trader@example.com"]
+    },
+    "reports": [
+      {
+        "reason": "Fake middleman service",
+        "description": "Claims to be a trusted middleman but runs away with items after both parties agree.",
+        "evidence": "https://imgur.com/a/fakeMiddleman",
+        "date": "2026-06-30"
+      }
+    ]
+  },
+  {
+    "robloxUserId": 555555555,
+    "knownUsernames": ["RobuxGeneratorGod"],
+    "additionalInfo": {
+      "facebook": {
+        "name": "",
+        "url": ""
+      },
+      "discord": "RobuxGen#9999",
+      "bankAccounts": []
+    },
+    "reports": [
+      {
+        "reason": "Phishing / Fake Robux generator",
+        "description": "Promotes a fake Robux generator website that steals login credentials.",
+        "evidence": "https://phishing-site.com/screenshot",
+        "date": "2026-07-01"
+      }
+    ]
+  },
+  {
+    "robloxUserId": 1122334455,
+    "knownUsernames": ["ItemThief2025", "ShadowNinja_Pro"],
+    "additionalInfo": {
+      "facebook": {
+        "name": "David Looter",
+        "url": "facebook.com/david.looter.90"
+      },
+      "discord": "DavidLoot#1111",
+      "bankAccounts": ["CashApp: $DavidLooter"]
+    },
+    "reports": [
+      {
+        "reason": "Stealing items from group funds",
+        "description": "Was given access to a Roblox group's funds and stole limited items worth over 1M Robux.",
+        "evidence": "https://twitter.com/evidence/status/123456",
+        "date": "2026-07-10"
+      },
+      {
+        "reason": "Spreading malware via Discord",
+        "description": "Sent malicious files disguised as 'free Robux tools' to group members.",
+        "evidence": "",
+        "date": "2026-07-11"
       }
     ]
   }

@@ -133,7 +133,7 @@
       
       let query;
       if (forceQuery !== null) {
-        query = forceQuery;
+        query = String(forceQuery);
         inputField.value = query;  // Reflejar en el campo de búsqueda
       } else {
         query = inputField.value.trim();
@@ -151,7 +151,7 @@
       let entry = null, matchField = null;
 
       if (isId) {
-        entry = database.find(item => String(item.robloxUserId) === lowerQuery);
+        entry = database.find(item => String(item.robloxUserId) === query);
         if (entry) matchField = 'robloxUserId';
       } else {
         entry = database.find(item => {
@@ -266,7 +266,7 @@
       }
 
       let html = '<h2 class="section-title">📋 Registered Scammers</h2><div class="scammer-grid">';
-      database.forEach((entry, index) => {
+      database.forEach(entry => {
         const knownUsernames = entry.knownUsernames.join(', ');
         const latestReport = entry.reports.length ? entry.reports[entry.reports.length - 1] : null;
         const reportCount = entry.reports.length;
