@@ -307,7 +307,7 @@ body {
 .scammer-grid {
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;               /* Antes 0.8rem, mucho más espacio entre tarjetas */
+  gap: 3.5rem;               /* Antes 0.8rem, mucho mas espacio entre tarjetas */
   margin-bottom: 2rem;
 }
 
