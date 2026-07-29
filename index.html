@@ -155,7 +155,7 @@
       const robloxProfileUrl = `https://www.roblox.com/users/${entry.robloxUserId}/profile`;
       let html = `
         <div class="info-item">
-          <span class="info-label">🎮 Roblox:</span>
+          <span class="info-label">Roblox:</span>
           <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer">ID ${escapeHtml(String(entry.robloxUserId))}</a>
           (known as: ${escapeHtml(knownUsernames)})
         </div>`;
@@ -170,16 +170,16 @@
           const linkPart = `<a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>`;
           html += `
             <div class="info-item">
-              <span class="info-label">🔵 Facebook:</span>
+              <span class="info-label">Facebook:</span>
               ${namePart} ${namePart ? '(' : ''}${linkPart}${namePart ? ')' : ''}
             </div>`;
         }
         if (info.discord) {
-          html += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
+          html += `<div class="info-item"><span class="info-label">Discord:</span> ${escapeHtml(info.discord)}</div>`;
         }
         if (info.bankAccounts && info.bankAccounts.length > 0) {
           const methods = info.bankAccounts.map(b => escapeHtml(b)).join(', ');
-          html += `<div class="info-item"><span class="info-label">💳 Payment Methods:</span> ${methods}</div>`;
+          html += `<div class="info-item"><span class="info-label">Payment Methods:</span> ${methods}</div>`;
         }
       }
       return html;
@@ -189,7 +189,7 @@
     function buildReportCard(report) {
       return `
         <div class="report-card">
-          <div class="reason">📌 ${escapeHtml(report.reason)}</div>
+          <div class="reason">${escapeHtml(report.reason)}</div>
           <p>${escapeHtml(report.description)}</p>
           ${report.evidence ? `<p class="evidence">🔗 Evidence: <a href="${escapeHtml(report.evidence)}" target="_blank">View proof</a></p>` : ''}
           <div class="date">Reported on ${report.date || 'Unknown date'}</div>
