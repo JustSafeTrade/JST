@@ -1,11 +1,11 @@
 [
   {
     "robloxUserId": 4613054061,
-    "knownUsernames": ["ZoeeeAlways", "azzsophat"],
+    "knownUsernames": ["veIIz4rdd","ZoeeeAlways", "azzsophat","azusanakanoKeion"],
     "additionalInfo": {
       "facebook": {
         "name": "Arinaya Eizo",
-        "url": "Facebook Link Not Available"
+        "url": ""
       },
       "discord": "arinayaeizo",
       "bankAccounts": ["Shopee Pay +62085178519764"]
@@ -13,61 +13,72 @@
     "reports": [
       {
         "reason": "Account theft & Recovery through support",
-        "description": "Scammed someone by 'selling' an account then recovering it via Roblox support. We believe this account was originally stolen and used for scamming.",
-        "evidence": "https://cdn.discordapp.com/attachments/1314674040547315844/1527520893482303701/resized.force.1aa9aaeb.png",
+        "description": "Scammed someone by 'selling' an account then recovering it via Roblox support. We believe this roblox account was originally stolen and used for scamming, and the Facebook account is and alt account.",
+        "evidence": "",
         "date": "2026-07-14"
       }
     ]
   },
+
+
+
   {
-    "robloxUserId": 123456789,
-    "knownUsernames": ["ScamMaster99", "MasterScam99", "ScamLord2024"],
+    "robloxUserId": 0,
+    "knownUsernames": [""],
     "additionalInfo": {
       "facebook": {
-        "name": "John Scammer",
-        "url": "facebook.com/john.scammer.735"
+        "name": "Rey Rey",
+        "url": "https://www.facebook.com/profile.php?id=61590139427803"
       },
-      "discord": "ScamLord#0001",
-      "bankAccounts": ["ES12345678901234567890", "MX98765432109876543210"]
+      "discord": "",
+      "bankAccounts": [""]
     },
     "reports": [
       {
-        "reason": "Trade scam",
-        "description": "Offered limited items and did not deliver after receiving payment.",
-        "evidence": "https://youtube.com/watch?v=exampleID",
-        "date": "2026-07-12"
-      },
-      {
-        "reason": "Impersonation",
-        "description": "Posed as an admin to ask for passwords.",
-        "evidence": "https://discord.com/channels/...",
-        "date": "2026-07-14"
+        "reason": "Buy Robux Scam",
+        "description": "User bought 2.8k robux from 3rd parties then refunded the money.",
+        "evidence": "",
+        "date": "2026-07-28"
       }
     ]
   },
+
+
+
   {
-    "robloxUserId": 987654321,
-    "knownUsernames": ["FastBucksTrader", "QuickCashPlays"],
+    "robloxAccounts": [
+      {
+        "robloxUserId": 2909212097,
+        "knownUsernames": ["ixvail", "kurtywoopsz", "CronusaI", "ixeoul", "Lonlyboy308", "just_notbleu"]
+      },
+      {
+        "robloxUserId": 3951966752,
+        "knownUsernames": ["vsl4y"]
+      }
+    ],
     "additionalInfo": {
       "facebook": {
-        "name": "Maria Trader",
-        "url": "facebook.com/maria.trader.2024"
+        "name": "Ryan Dixon",
+        "url": "https://www.facebook.com/share/1ESJaozHQM/"
       },
-      "discord": "MariaTrader#4567",
-      "bankAccounts": ["PayPal: maria.trader@example.com"]
+      "discord": "",
+      "bankAccounts": [""]
     },
     "reports": [
       {
-        "reason": "Fake middleman service",
-        "description": "Claims to be a trusted middleman but runs away with items after both parties agree.",
-        "evidence": "https://imgur.com/a/fakeMiddleman",
-        "date": "2026-06-30"
+        "reason": "Account theft & Recovery through support",
+        "description": "User is well known in many communities for selling accounts, then he recovers it trough support, we believe both accounts are used for scams and he blocks people so they can't see his scam attempts.",
+        "evidence": "",
+        "date": "2026-07-21"
       }
     ]
   },
+
+
+  
   {
     "robloxUserId": 555555555,
-    "knownUsernames": ["RobuxGeneratorGod"],
+    "knownUsernames": ["example"],
     "additionalInfo": {
       "facebook": {
         "name": "",
@@ -82,32 +93,6 @@
         "description": "Promotes a fake Robux generator website that steals login credentials.",
         "evidence": "https://phishing-site.com/screenshot",
         "date": "2026-07-01"
-      }
-    ]
-  },
-  {
-    "robloxUserId": 1122334455,
-    "knownUsernames": ["ItemThief2025", "ShadowNinja_Pro"],
-    "additionalInfo": {
-      "facebook": {
-        "name": "David Looter",
-        "url": "facebook.com/david.looter.90"
-      },
-      "discord": "DavidLoot#1111",
-      "bankAccounts": ["CashApp: $DavidLooter"]
-    },
-    "reports": [
-      {
-        "reason": "Stealing items from group funds",
-        "description": "Was given access to a Roblox group's funds and stole limited items worth over 1M Robux.",
-        "evidence": "https://twitter.com/evidence/status/123456",
-        "date": "2026-07-10"
-      },
-      {
-        "reason": "Spreading malware via Discord",
-        "description": "Sent malicious files disguised as 'free Robux tools' to group members.",
-        "evidence": "",
-        "date": "2026-07-11"
       }
     ]
   }
