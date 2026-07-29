@@ -384,3 +384,14 @@ body {
   border-top: 1px solid #2d2d3a;
   padding-top: 1rem;
 }
+
+/* ==================== DISCORD LINK IN SUBTITLE ==================== */
+.discord-link {
+  color: #60a5fa;             /* Azul claro profesional, igual que otros enlaces */
+  text-decoration: underline;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+.discord-link:hover {
+  color: #93bbfd;             /* Azul más claro al pasar el cursor */
+}
