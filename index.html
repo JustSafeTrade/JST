@@ -16,7 +16,6 @@
     </h1>
     <p class="subtitle">Community-maintained scammer registry. Reports are verified manually via <a href="https://discord.gg/w67pM6QpPb" target="_blank" rel="noopener noreferrer" class="discord-link">Discord</a>.</p>
 
-    <!-- Barra de búsqueda fija al hacer scroll -->
     <div class="search-box" id="searchBox">
       <input type="text" id="searchInput" placeholder="Search by Roblox ID, username, Discord, Facebook, Bank, Payment Method..." autocomplete="off">
       <button onclick="searchUser()">Search</button>
@@ -24,7 +23,6 @@
 
     <div id="resultContainer"></div>
 
-    <!-- Lista pública de todos los scammers -->
     <div id="scammerList"></div>
 
     <div class="legal-note">
@@ -117,7 +115,25 @@
     fetch('data.json')
       .then(r => r.json())
       .then(d => {
-        database = d;
+        // Normalizar todas las entradas para que tengan robloxAccounts como array
+        database = d.map((entry, index) => {
+          // Si no tiene robloxAccounts, crear uno a partir de robloxUserId y knownUsernames
+          if (!entry.robloxAccounts) {
+            entry.robloxAccounts = [{
+              robloxUserId: entry.robloxUserId,
+              knownUsernames: entry.knownUsernames || []
+            }];
+          } else {
+            // Asegurar que cada cuenta dentro de robloxAccounts tenga knownUsernames (por si falta)
+            entry.robloxAccounts = entry.robloxAccounts.map(acc => ({
+              robloxUserId: acc.robloxUserId,
+              knownUsernames: acc.knownUsernames || []
+            }));
+          }
+          // Guardar el índice original para referencia
+          entry._id = index;
+          return entry;
+        });
         renderScammerList();
       })
       .catch(e => console.error(e));
@@ -128,11 +144,13 @@
     }
 
     // Construye el bloque de coincidencia (match highlight)
-    function buildMatchHighlight(entry, matchField, lowerQuery) {
-      if (matchField === 'robloxUserId') return `<div class="match-highlight">🔍 Match found: Roblox ID <strong>${escapeHtml(String(entry.robloxUserId))}</strong></div>`;
-      if (matchField === 'robloxUsername') {
-        const matched = entry.knownUsernames.find(n => n.toLowerCase() === lowerQuery);
-        return `<div class="match-highlight">🔍 Match found: Roblox username <strong>${escapeHtml(matched)}</strong></div>`;
+    function buildMatchHighlight(entry, matchField, lowerQuery, matchAccount) {
+      if (matchField === 'roblox') {
+        // Determinar qué cuenta específica coincidió
+        const matched = matchAccount ? 
+          (String(matchAccount.robloxUserId) === lowerQuery ? `ID ${matchAccount.robloxUserId}` : 
+           matchAccount.knownUsernames.find(n => n.toLowerCase() === lowerQuery) || '') : '';
+        return `<div class="match-highlight">🔍 Match found: Roblox ${/^\d+$/.test(lowerQuery) ? 'ID' : 'username'} <strong>${escapeHtml(matched)}</strong></div>`;
       }
       if (matchField === 'facebook') {
         const fb = entry.additionalInfo.facebook;
@@ -150,16 +168,20 @@
       return '';
     }
 
-    // Construye el bloque unificado de información (Roblox, Facebook, Discord, Payment Methods)
+    // Construye el bloque unificado de información (todas las cuentas Roblox, Facebook, Discord, Payment Methods)
     function buildInfoBlock(entry) {
-      const knownUsernames = entry.knownUsernames.join(', ');
-      const robloxProfileUrl = `https://www.roblox.com/users/${entry.robloxUserId}/profile`;
-      let html = `
-        <div class="info-item">
-          <span class="info-label">Roblox:</span>
-          <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer">ID ${escapeHtml(String(entry.robloxUserId))}</a>
-          (known as: ${escapeHtml(knownUsernames)})
-        </div>`;
+      let html = '';
+      // Mostrar todas las cuentas Roblox
+      entry.robloxAccounts.forEach((acc, idx) => {
+        const knownUsernames = acc.knownUsernames.join(', ');
+        const robloxProfileUrl = `https://www.roblox.com/users/${acc.robloxUserId}/profile`;
+        html += `
+          <div class="info-item">
+            <span class="info-label">${idx === 0 ? '🎮 Roblox' : '↳'}:</span>
+            <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer">ID ${escapeHtml(String(acc.robloxUserId))}</a>
+            (known as: ${escapeHtml(knownUsernames)})
+          </div>`;
+      });
 
       if (entry.additionalInfo) {
         const info = entry.additionalInfo;
@@ -168,19 +190,19 @@
           const fbUrl = typeof info.facebook === 'object' ? info.facebook.url : info.facebook;
           const fbLink = fbUrl.startsWith('http') ? fbUrl : `https://${fbUrl}`;
           const namePart = fbName ? escapeHtml(fbName) : '';
-          const linkPart = `<a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>`;
+          const linkPart = fbLink !== '' ? `<a href="${escapeHtml(fbLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(fbUrl)}</a>` : '';
           html += `
             <div class="info-item">
-              <span class="info-label">Facebook:</span>
-              ${namePart} ${namePart ? '(' : ''}${linkPart}${namePart ? ')' : ''}
+              <span class="info-label">🔵 Facebook:</span>
+              ${namePart} ${namePart && linkPart ? '(' : ''}${linkPart}${namePart && linkPart ? ')' : ''}
             </div>`;
         }
         if (info.discord) {
-          html += `<div class="info-item"><span class="info-label">Discord:</span> ${escapeHtml(info.discord)}</div>`;
+          html += `<div class="info-item"><span class="info-label">💬 Discord:</span> ${escapeHtml(info.discord)}</div>`;
         }
         if (info.bankAccounts && info.bankAccounts.length > 0) {
-          const methods = info.bankAccounts.map(b => escapeHtml(b)).join(', ');
-          html += `<div class="info-item"><span class="info-label">Payment Methods:</span> ${methods}</div>`;
+          const methods = info.bankAccounts.filter(b => b.trim() !== '').map(b => escapeHtml(b)).join(', ');
+          if (methods) html += `<div class="info-item"><span class="info-label">💳 Payment Methods:</span> ${methods}</div>`;
         }
       }
       return html;
@@ -221,20 +243,27 @@
       container.innerHTML = '';
       const isId = /^\d+$/.test(query);
       const lowerQuery = query.toLowerCase();
-      let entry = null, matchField = null;
+      let entry = null, matchField = null, matchAccount = null;
 
       if (isId) {
-        entry = database.find(item => String(item.robloxUserId) === query);
-        if (entry) matchField = 'robloxUserId';
+        // Buscar por ID en todas las cuentas
+        entry = database.find(item => 
+          item.robloxAccounts.some(acc => String(acc.robloxUserId) === query)
+        );
+        if (entry) {
+          matchField = 'roblox';
+          matchAccount = entry.robloxAccounts.find(acc => String(acc.robloxUserId) === query);
+        }
       } else {
-        entry = database.find(item => {
-          if (item.knownUsernames.some(name => name.toLowerCase() === lowerQuery)) {
-            matchField = 'robloxUsername';
-            return true;
-          }
-          return false;
-        });
-        if (!entry && lowerQuery.length >= 3) {
+        // Coincidencia exacta en usernames
+        entry = database.find(item => 
+          item.robloxAccounts.some(acc => acc.knownUsernames.some(name => name.toLowerCase() === lowerQuery))
+        );
+        if (entry) {
+          matchField = 'roblox';
+          matchAccount = entry.robloxAccounts.find(acc => acc.knownUsernames.some(name => name.toLowerCase() === lowerQuery));
+        } else if (lowerQuery.length >= 3) {
+          // Coincidencia parcial en Facebook, Discord, Bank
           entry = database.find(item => {
             if (item.additionalInfo) {
               const info = item.additionalInfo;
@@ -257,7 +286,7 @@
         return;
       }
 
-      const matchHtml = buildMatchHighlight(entry, matchField, lowerQuery);
+      const matchHtml = buildMatchHighlight(entry, matchField, lowerQuery, matchAccount);
       const infoItems = buildInfoBlock(entry);
       const reportsHtml = '<h3 class="reports-heading">Reports:</h3>' + entry.reports.map(buildReportCard).join('');
 
@@ -277,20 +306,22 @@
         return;
       }
 
-      // Aleatorizar el orden
       const shuffled = [...database].sort(() => Math.random() - 0.5);
 
       let html = '<h2 class="section-title">Registered Scammers</h2><div class="scammer-grid">';
       shuffled.forEach(entry => {
-        const knownUsernames = entry.knownUsernames.join(', ');
+        const totalAccounts = entry.robloxAccounts.length;
+        const mainAccount = entry.robloxAccounts[0];
+        const knownUsernames = mainAccount.knownUsernames.join(', ');
         const latestReport = entry.reports.length ? entry.reports[entry.reports.length - 1] : null;
         const reportCount = entry.reports.length;
-        const robloxProfileUrl = `https://www.roblox.com/users/${entry.robloxUserId}/profile`;
+        const robloxProfileUrl = `https://www.roblox.com/users/${mainAccount.robloxUserId}/profile`;
 
         html += `
-          <div class="scammer-card" data-entryid="${escapeHtml(String(entry.robloxUserId))}">
+          <div class="scammer-card" data-entryid="${escapeHtml(String(mainAccount.robloxUserId))}" data-entryindex="${entry._id}">
             <div class="scammer-card-header">
-              <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer" class="roblox-id-link">Roblox ID: ${escapeHtml(String(entry.robloxUserId))}</a>
+              <a href="${escapeHtml(robloxProfileUrl)}" target="_blank" rel="noopener noreferrer" class="roblox-id-link">Roblox ID: ${escapeHtml(String(mainAccount.robloxUserId))}</a>
+              ${totalAccounts > 1 ? `<span class="account-count"> (+${totalAccounts - 1} more)</span>` : ''}
             </div>
             <div class="scammer-known-as">Known as: ${escapeHtml(knownUsernames)}</div>
             <div class="scammer-reports">Reports: <strong>${reportCount}</strong></div>
@@ -309,18 +340,16 @@
 
         const card = button.closest('.scammer-card');
         const detailsDiv = card.querySelector('.scammer-details');
-        const entryId = card.dataset.entryid;
-        const entry = database.find(item => String(item.robloxUserId) === entryId);
+        const entryIndex = parseInt(card.dataset.entryindex, 10);
+        const entry = database[entryIndex];
         if (!entry) return;
 
-        // Si ya está expandido, lo cerramos
         if (detailsDiv.style.display !== 'none') {
           detailsDiv.style.display = 'none';
           button.innerHTML = '🔽 View Details';
           return;
         }
 
-        // Construir contenido de la expansión
         const infoBlock = buildInfoBlock(entry);
         const reportsHtml = '<h3 class="reports-heading">Reports:</h3>' + entry.reports.map(buildReportCard).join('');
         detailsDiv.innerHTML = `
@@ -329,7 +358,6 @@
             ${reportsHtml}
           </div>`;
         
-        // Mostrar con animación (usaremos una clase CSS para transición)
         detailsDiv.style.display = 'block';
         button.innerHTML = '🔼 Hide Details';
       });
