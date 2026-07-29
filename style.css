@@ -75,13 +75,14 @@ body {
 /* ==================== ANIMATED TITLE ==================== */
 .animated-heading {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #cbd5e1;                /* Gris claro para el título */
+  margin-bottom: 2.5rem;        /* antes 1.5rem → más espacio antes del subtítulo */
+  color: #cbd5e1;
   font-size: 3rem;
   text-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
   font-family: 'Courier New', monospace;
   letter-spacing: 2px;
-  height: 3.5rem;
+  min-height: 3.5rem;          /* altura mínima en lugar de fija */
+  line-height: 1.2;            /* evita que el texto se corte verticalmente */
 }
 
 .cursor {
