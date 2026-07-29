@@ -77,22 +77,22 @@
 
   
   {
-    "robloxUserId": 555555555,
+    "robloxUserId": 123456789,
     "knownUsernames": ["example"],
     "additionalInfo": {
       "facebook": {
-        "name": "",
-        "url": ""
+        "name": "example",
+        "url": "example"
       },
-      "discord": "RobuxGen#9999",
-      "bankAccounts": []
+      "discord": "example",
+      "bankAccounts": ["example"]
     },
     "reports": [
       {
-        "reason": "Phishing / Fake Robux generator",
-        "description": "Promotes a fake Robux generator website that steals login credentials.",
-        "evidence": "https://phishing-site.com/screenshot",
-        "date": "2026-07-01"
+        "reason": "example",
+        "description": "example",
+        "evidence": "example",
+        "date": "0000-00-00"
       }
     ]
   }
