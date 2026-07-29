@@ -6,8 +6,8 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #050505;
-  color: #eee;
+  background: #0b0b0e;          /* Fondo casi negro, ligeramente más claro que #050505 */
+  color: #d1d1d1;                /* Texto base gris claro */
   min-height: 100vh;
   position: relative;
   display: flex;
@@ -24,7 +24,7 @@ body {
   height: 100%;
   z-index: -1;
   overflow: hidden;
-  opacity: 0.08;
+  opacity: 0.05;                 /* Más sutil aún */
   pointer-events: none;
   user-select: none;
   display: flex;
@@ -39,9 +39,9 @@ body {
   max-width: 150%;
   font-family: 'Courier New', monospace;
   font-size: 3rem;
-  color: #bc96ff;
+  color: #4a5568;                /* Azul grisáceo muy apagado */
   transform: rotate(0deg);
-  filter: blur(6px);
+  filter: blur(8px);
   text-align: center;
   margin: auto;
 }
@@ -54,7 +54,7 @@ body {
 }
 
 .db-table th {
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.4);
   letter-spacing: 10px;
 }
 
@@ -75,17 +75,17 @@ body {
 /* ==================== ANIMATED TITLE ==================== */
 .animated-heading {
   text-align: center;
-  margin-bottom: 2rem;       /* Antes 0.5rem, más espacio entre título y subtítulo */
-  color: #b388ff;
+  margin-bottom: 1.5rem;
+  color: #cbd5e1;                /* Gris claro para el título */
   font-size: 3rem;
-  text-shadow: 0 0 15px rgba(179, 136, 255, 0.7);
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
   font-family: 'Courier New', monospace;
   letter-spacing: 2px;
   height: 3.5rem;
 }
 
 .cursor {
-  color: #b388ff;
+  color: #cbd5e1;
   animation: blink 0.8s infinite;
   font-weight: 100;
 }
@@ -97,8 +97,8 @@ body {
 
 .subtitle {
   text-align: center;
-  margin-bottom: 2.5rem;      /* Antes 2rem, más espacio debajo del subtítulo */
-  color: #999;
+  margin-bottom: 2.5rem;
+  color: #8a8f98;                /* Gris medio */
   font-size: 0.95rem;
 }
 
@@ -107,16 +107,16 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(15, 15, 20, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(18, 18, 22, 0.95);
+  backdrop-filter: blur(12px);
   padding: 0.5rem;
   border-radius: 10px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  border: 1px solid #2e1a47;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  border: 1px solid #2d2d3a;
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-bottom: 3rem;        /* Antes 2rem, más separación de la siguiente sección */
+  margin-bottom: 3rem;
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -127,32 +127,32 @@ body {
   padding: 0.75rem 1rem;
   border: none;
   border-radius: 8px;
-  background: rgba(255,255,255,0.08);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e0e0e0;
   font-size: 1rem;
   outline: none;
   transition: background 0.3s;
 }
 
 .search-box input:focus {
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .search-box button {
   padding: 0.75rem 1.5rem;
-  background: #7b1fa2;
+  background: #2563eb;            /* Azul profesional */
   border: none;
   border-radius: 8px;
   color: #fff;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s, box-shadow 0.3s;
-  box-shadow: 0 0 10px rgba(123, 31, 162, 0.5);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
 }
 
 .search-box button:hover {
-  background: #9c27b0;
-  box-shadow: 0 0 15px rgba(156, 39, 176, 0.7);
+  background: #1d4ed8;            /* Azul más oscuro al hover */
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
 }
 
 /* ==================== RESULT CARDS ==================== */
@@ -166,40 +166,40 @@ body {
 }
 
 .result {
-  background: rgba(25, 25, 25, 0.2);
+  background: rgba(22, 22, 28, 0.8);
   backdrop-filter: blur(10px);
   border-radius: 10px;
   padding: 1.5rem;
   margin-top: 1rem;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
-  border: 1px solid #2e1a47;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2d2d3a;
   margin-bottom: 2rem;
 }
 
 .no-results {
   text-align: center;
   padding: 2rem;
-  color: #aaa;
-  background: rgba(20, 20, 30, 0.6);
+  color: #9ca3af;
+  background: rgba(22, 22, 28, 0.7);
   border-radius: 8px;
   backdrop-filter: blur(5px);
-  border: 1px solid #2e1a47;
+  border: 1px solid #2d2d3a;
   margin-top: 1rem;
 }
 
 /* ==================== MATCH HIGHLIGHT ==================== */
 .match-highlight {
-  background: rgba(123, 31, 162, 0.3);
-  border-left: 4px solid #b388ff;
+  background: rgba(37, 99, 235, 0.15);
+  border-left: 4px solid #2563eb;
   padding: 0.8rem 1rem;
   margin-bottom: 1rem;
   border-radius: 4px;
   font-size: 1rem;
-  color: #ddd;
+  color: #d1d5db;
 }
 
 .match-highlight strong {
-  color: #fff;
+  color: #f0f0f0;
   font-weight: 600;
 }
 
@@ -210,14 +210,14 @@ body {
   gap: 0.4rem;
   margin-bottom: 1.5rem;
   padding: 0.8rem;
-  background: rgba(30, 30, 45, 0.4);
+  background: rgba(30, 30, 38, 0.5);
   border-radius: 8px;
-  border: 1px solid #2e1a47;
+  border: 1px solid #2d2d3a;
 }
 
 .info-item {
   font-size: 0.95rem;
-  color: #ddd;
+  color: #d1d1d1;
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
@@ -226,48 +226,48 @@ body {
 
 .info-label {
   font-weight: bold;
-  color: #ce93d8;
+  color: #9ca3af;                /* Etiquetas en gris claro */
   margin-right: 0.3rem;
 }
 
-.info-link {
-  color: #ba68c8;
-  margin-left: 0.3rem;
-  font-size: 0.85rem;
+/* Enlaces dentro de info-item (Roblox, Facebook) */
+.info-item a {
+  color: #60a5fa;                /* Azul claro profesional */
   text-decoration: none;
+  font-weight: 500;
 }
-.info-link:hover {
+.info-item a:hover {
   text-decoration: underline;
 }
 
 /* ==================== REPORT CARDS ==================== */
 .report-card {
-  background: rgba(30, 30, 45, 0.8);
+  background: rgba(28, 28, 36, 0.8);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
   backdrop-filter: blur(5px);
-  border: 1px solid #2e1a47;
+  border: 1px solid #2d2d3a;
   transition: background 0.2s;
 }
 
 .report-card:hover {
-  background: rgba(40, 30, 60, 0.8);
+  background: rgba(35, 35, 45, 0.8);
 }
 
 .report-card .reason {
   font-weight: bold;
-  color: #e94560;
+  color: #dc2626;                /* Rojo oscuro profesional para motivos */
 }
 
 .report-card .date {
   font-size: 0.8rem;
-  color: #888;
+  color: #8a8f98;
   margin-top: 0.3rem;
 }
 
 .evidence a {
-  color: #ba68c8;
+  color: #60a5fa;
   text-decoration: none;
   font-weight: bold;
 }
@@ -280,26 +280,26 @@ body {
   margin-top: 2rem;
   font-size: 0.75rem;
   color: #666;
-  border-top: 1px solid #333;
+  border-top: 1px solid #2d2d3a;
   padding-top: 1rem;
   text-align: center;
 }
 
 /* ==================== REPORTS HEADING ==================== */
 .reports-heading {
-  color: #b388ff;
+  color: #cbd5e1;
   font-size: 1.2rem;
   margin: 1.8rem 0 1.2rem;
   font-weight: bold;
-  border-bottom: 1px solid #2e1a47;
+  border-bottom: 1px solid #2d2d3a;
   padding-bottom: 0.4rem;
 }
 
 /* ==================== SCAMMER LIST SECTION ==================== */
 .section-title {
-  color: #b388ff;
+  color: #cbd5e1;
   font-size: 1.8rem;
-  margin: 6rem 0 2rem;        /* Antes 3rem 0 1.5rem, ahora mayor separación superior e inferior */
+  margin: 6rem 0 2rem;
   text-align: center;
   font-family: 'Courier New', monospace;
 }
@@ -307,13 +307,13 @@ body {
 .scammer-grid {
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;               /* Antes 0.8rem, mucho mas espacio entre tarjetas */
+  gap: 3.5rem;
   margin-bottom: 2rem;
 }
 
 .scammer-card {
-  background: rgba(25, 25, 35, 0.85);
-  border: 1px solid #2e1a47;
+  background: rgba(22, 22, 28, 0.85);
+  border: 1px solid #2d2d3a;
   border-radius: 8px;
   padding: 1rem;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -322,7 +322,7 @@ body {
 
 .scammer-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .scammer-card-header {
@@ -330,7 +330,7 @@ body {
 }
 
 .roblox-id-link {
-  color: #ce93d8;
+  color: #60a5fa;
   text-decoration: none;
   font-weight: bold;
   font-size: 1.1rem;
@@ -340,26 +340,26 @@ body {
 }
 
 .scammer-known-as {
-  color: #aaa;
+  color: #9ca3af;
   font-size: 0.9rem;
   margin-bottom: 0.3rem;
 }
 
 .scammer-reports {
   font-size: 0.9rem;
-  color: #ddd;
+  color: #d1d5db;
   margin-bottom: 0.2rem;
 }
 
 .scammer-latest-reason {
   font-size: 0.85rem;
-  color: #e94560;
+  color: #dc2626;                /* Rojo para último motivo */
   font-weight: bold;
   margin-bottom: 0.6rem;
 }
 
 .view-details-btn {
-  background: #7b1fa2;
+  background: #2563eb;
   border: none;
   color: #fff;
   padding: 0.4rem 1rem;
@@ -370,7 +370,7 @@ body {
   font-size: 0.9rem;
 }
 .view-details-btn:hover {
-  background: #9c27b0;
+  background: #1d4ed8;
 }
 
 /* ==================== SCAMMER DETAILS (EXPANSION) ==================== */
@@ -380,6 +380,6 @@ body {
 }
 
 .expanded-info {
-  border-top: 1px solid #2e1a47;
+  border-top: 1px solid #2d2d3a;
   padding-top: 1rem;
 }
